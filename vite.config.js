@@ -13,6 +13,7 @@ export default defineConfig({
       closeBundle() {
         mkdirSync("dist/server", { recursive: true });
         copyFileSync("worker-static.js", "dist/server/index.js");
+        copyFileSync("untitled.gltf", "dist/untitled.gltf");
       },
     },
   ],
