@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Portafolio de Joel: dos años programando con Python, JavaScript, HTML y CSS, experimentando con videojuegos, Linux y Android." />
+  <meta name="theme-color" content="#050608" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Joel — Programador y curioso por naturaleza" />
+  <meta property="og:description" content="Python, JavaScript, videojuegos, Linux y dos años aprendiendo a base de hacer." />
+  <meta property="og:image" content="/assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Joel — Programador y curioso por naturaleza" />
+  <meta name="twitter:description" content="Python, JavaScript, videojuegos, Linux y dos años aprendiendo a base de hacer." />
+  <meta name="twitter:image" content="/assets/og.png" />
+  <title>Joel — Programador y creador</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script type="module" src="/script.js"></script>
+</head>
+<body class="is-loading">
+  <div class="boot" id="boot" aria-live="polite">
+    <div class="boot__top">
+      <span>JX/26</span>
+      <span>INICIANDO MUNDO</span>
+    </div>
+    <div class="boot__core" aria-hidden="true">
+      <span class="boot__orbit boot__orbit--a"></span>
+      <span class="boot__orbit boot__orbit--b"></span>
+      <span class="boot__dot"></span>
+    </div>
+    <div class="boot__bottom">
+      <span id="boot-status">CARGANDO GEOMETRÍA</span>
+      <strong id="boot-progress">000</strong>
+    </div>
+    <div class="boot__line"><span id="boot-line"></span></div>
+  </div>
+
+  <canvas id="webgl" aria-hidden="true"></canvas>
+  <div class="world-fallback" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span></span></div>
+
+  <header class="hud">
+    <a class="hud__brand magnetic" href="#inicio" aria-label="Volver al inicio">
+      <span>J</span><span class="hud__brand-mark"></span><span>L</span>
+    </a>
+
+    <div class="hud__center" aria-hidden="true">
+      <span class="status-dot"></span>
+      <span>JOEL'S LAB</span>
+      <span id="hud-mode">ONLINE</span>
+    </div>
+
+    <button class="hud__motion magnetic" id="motion-toggle" type="button" aria-pressed="false">
+      <span>MOTION</span>
+      <i aria-hidden="true"></i>
+    </button>
+  </header>
+
+  <nav class="scene-nav" aria-label="Escenas">
+    <a href="#inicio" data-scene-link="0" aria-label="Introducción"><span>00</span></a>
+    <a href="#manifiesto" data-scene-link="1" aria-label="Manifiesto"><span>01</span></a>
+    <a href="#sistemas" data-scene-link="2" aria-label="Sistemas"><span>02</span></a>
+    <a href="#proyecto-uno" data-scene-link="3" aria-label="Proyecto uno"><span>03</span></a>
+    <a href="#proyecto-dos" data-scene-link="4" aria-label="Proyecto dos"><span>04</span></a>
+    <a href="#contacto" data-scene-link="5" aria-label="Contacto"><span>05</span></a>
+  </nav>
+
+  <aside class="telemetry" aria-hidden="true">
+    <span id="telemetry-x">X 000</span>
+    <span id="telemetry-y">Y 000</span>
+    <span id="telemetry-scroll">DEPTH 000</span>
+  </aside>
+
+  <div class="progress" aria-hidden="true"><span id="page-progress"></span></div>
+
+  <main>
+    <section class="scene hero" id="inicio" data-scene="0" data-tone="dark">
+      <div class="hero__index reveal" data-delay="0">PORTAFOLIO / TODAVÍA APRENDIENDO</div>
+
+      <div class="hero__title" aria-label="Joel">
+        <span class="hero__letter">J</span>
+        <span class="hero__letter">O</span>
+        <span class="hero__letter">E</span>
+        <span class="hero__letter">L</span>
+      </div>
+
+      <div class="hero__copy reveal" data-delay="1">
+        <p>2 AÑOS PROGRAMANDO, ROMPIENDO Y APRENDIENDO</p>
+        <p>PYTHON · JAVASCRIPT · JUEGOS · LINUX</p>
+      </div>
+
+      <a class="hero__enter magnetic" href="#manifiesto">
+        <span>CONÓCEME</span>
+        <i aria-hidden="true">↓</i>
+      </a>
+
+      <div class="hero__hint" aria-hidden="true">
+        <span>MUEVE EL CURSOR</span>
+        <span>MANTÉN PRESIONADO PARA DISTORSIONAR</span>
+      </div>
+    </section>
+
+    <section class="scene manifesto" id="manifiesto" data-scene="1" data-tone="dark">
+      <div class="scene-label reveal"><span>01</span> SOBRE MÍ</div>
+      <div class="manifesto__copy">
+        <p class="manifesto__line reveal">PRUEBO.</p>
+        <p class="manifesto__line manifesto__line--outline reveal">FALLO.</p>
+        <p class="manifesto__line reveal">ARREGLO.</p>
+        <p class="manifesto__line manifesto__line--accent reveal">REPITO.</p>
+      </div>
+      <p class="manifesto__note reveal">
+        Llevo dos años programando. Empecé por curiosidad y todavía sigo igual: probando ideas,
+        leyendo errores, instalando sistemas y tratando de entender cómo funcionan las cosas.
+      </p>
+    </section>
+
+    <section class="scene systems" id="sistemas" data-scene="2" data-tone="dark">
+      <div class="scene-label reveal"><span>02</span> LO QUE SÉ Y USO</div>
+      <div class="systems__heading reveal">
+        <p>MI CAJA DE HERRAMIENTAS</p>
+        <h2>STACK</h2>
+      </div>
+
+      <div class="systems__grid">
+        <article class="system-card reveal" data-card="01">
+          <span class="system-card__number">01</span>
+          <h3>Código</h3>
+          <p>Python y JavaScript son mis herramientas principales. También uso HTML, CSS y GitHub para sacar ideas del editor y ponerlas a funcionar.</p>
+          <div class="system-card__tags"><span>PYTHON</span><span>JAVASCRIPT</span><span>HTML / CSS</span><span>GITHUB</span></div>
+        </article>
+
+        <article class="system-card reveal" data-card="02">
+          <span class="system-card__number">02</span>
+          <h3>Juegos</h3>
+          <p>Uso GameMaker y también he probado Godot. Me interesa entender cómo se siente un salto, un movimiento o una pequeña mecánica.</p>
+          <div class="system-card__tags"><span>GAMEMAKER</span><span>GODOT</span><span>2D</span></div>
+        </article>
+
+        <article class="system-card reveal" data-card="03">
+          <span class="system-card__number">03</span>
+          <h3>Sistemas</h3>
+          <p>He usado CachyOS, Arch, Linux Mint y Ubuntu. También me gusta instalar custom ROMs y meter mano hasta entender qué está pasando.</p>
+          <div class="system-card__tags"><span>LINUX</span><span>ARCH</span><span>CACHYOS</span><span>ANDROID</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="scene project project--one" id="proyecto-uno" data-scene="3" data-tone="light">
+      <div class="scene-label scene-label--dark reveal"><span>03</span> PROYECTO REAL / GITHUB</div>
+
+      <div class="project__media reveal">
+        <div class="media-fallback media-fallback--one" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <video muted loop playsinline preload="metadata" poster="/assets/signal-poster.webp" aria-label="Visual abstracto de JuegoGameMaker">
+          <source src="/assets/signal-loop.mp4" type="video/mp4" />
+        </video>
+        <div class="project__media-hud" aria-hidden="true">
+          <span>REPO PÚBLICO</span><span>7 COMMITS</span>
+        </div>
+      </div>
+
+      <div class="project__copy">
+        <p class="project__eyebrow reveal">GAMEMAKER / WEB EXPORT</p>
+        <h2 class="reveal">GAME<br />MAKER</h2>
+        <p class="project__description reveal">
+          Uno de mis proyectos más recientes: un juego hecho con GameMaker y llevado a la web.
+          En el repositorio está el juego junto con la página que lo presenta.
+        </p>
+        <div class="project__meta reveal">
+          <span>HERRAMIENTA</span><strong>GAMEMAKER</strong>
+          <span>WEB</span><strong>HTML / CSS / JS</strong>
+        </div>
+        <a class="project__link magnetic" href="https://github.com/joelbome30/JuegoGameMaker" target="_blank" rel="noreferrer">
+          <span>VER EN GITHUB</span><i>↗</i>
+        </a>
+      </div>
+    </section>
+
+    <section class="scene project project--two" id="proyecto-dos" data-scene="4" data-tone="dark">
+      <div class="scene-label reveal"><span>04</span> PROYECTO REAL / GITHUB</div>
+
+      <div class="project__media reveal">
+        <div class="media-fallback media-fallback--two" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <video muted loop playsinline preload="metadata" poster="/assets/core-poster.webp" aria-label="Visual abstracto de Juegos Frivnt">
+          <source src="/assets/core-loop.mp4" type="video/mp4" />
+        </video>
+        <div class="project__media-hud" aria-hidden="true">
+          <span>MINIGAMES</span><span>7 COMMITS</span>
+        </div>
+      </div>
+
+      <div class="project__copy">
+        <p class="project__eyebrow reveal">JAVASCRIPT / HTML / CSS / PYTHON</p>
+        <h2 class="reveal">JUEGOS<br />FRIVNT</h2>
+        <p class="project__description reveal">
+          Una colección de minijuegos que fui reuniendo y conectando en una sola web.
+          Es uno de esos proyectos donde aprendo agregando algo nuevo cada vez.
+        </p>
+        <div class="project__meta reveal">
+          <span>STACK</span><strong>JS / HTML / CSS</strong>
+          <span>TAMBIÉN</span><strong>PYTHON</strong>
+        </div>
+        <a class="project__link magnetic" href="https://github.com/joelbome30/Juegos_Frivnt" target="_blank" rel="noreferrer">
+          <span>VER EN GITHUB</span><i>↗</i>
+        </a>
+      </div>
+    </section>
+
+    <section class="scene lab" id="laboratorio" data-scene="4" data-tone="dark">
+      <div class="lab__ring" aria-hidden="true"></div>
+      <div class="scene-label reveal"><span>05</span> MI EXPERIMENTO 3D</div>
+      <div class="lab__content reveal">
+        <p>ESTA PÁGINA TAMBIÉN ES UNA PRUEBA</p>
+        <h2>MUEVE.<br />TOCA.<br /><span>JUEGA.</span></h2>
+      </div>
+      <p class="lab__note reveal">Estoy experimentando con 3D para la web. Mueve el cursor y mantén presionado: quiero que esto se sienta más como un juego que como una página.</p>
+    </section>
+
+    <section class="scene contact" id="contacto" data-scene="5" data-tone="signal">
+      <div class="scene-label scene-label--dark reveal"><span>06</span> MI CÓDIGO</div>
+      <div class="contact__content">
+        <p class="contact__kicker reveal">SI QUIERES VER CÓMO VOY APRENDIENDO</p>
+        <h2 class="reveal">TODO ESTÁ<br /><span>EN GIT<br />HUB.</span></h2>
+        <a class="contact__mail magnetic reveal" href="https://github.com/joelbome30" target="_blank" rel="noreferrer">
+          <span>github.com/joelbome30</span><i>↗</i>
+        </a>
+      </div>
+      <footer class="contact__footer">
+        <span>© 2026 JOEL</span>
+        <span>COLOMBIA</span>
+        <span>PYTHON + JS + CURIOSIDAD</span>
+      </footer>
+    </section>
+  </main>
+
+  <noscript>
+    <div class="noscript">Esta experiencia necesita JavaScript para ejecutar su mundo 3D.</div>
+  </noscript>
+</body>
+</html>
