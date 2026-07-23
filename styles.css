@@ -872,20 +872,20 @@ button.world-label.is-hovered::after {
 
 .world-label > span {
   color: var(--cyan);
-  font: 500 0.48rem/1 "DM Mono", monospace;
+  font: 500 0.56rem/1 "DM Mono", monospace;
   letter-spacing: 0.16em;
 }
 
 .world-label > strong {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.94rem;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0.08em;
 }
 
 .world-label > small {
   color: var(--muted);
-  font: 400 0.45rem/1.3 "DM Mono", monospace;
+  font: 500 0.52rem/1.35 "DM Mono", monospace;
   letter-spacing: 0.09em;
 }
 
@@ -908,46 +908,46 @@ button.world-label.is-hovered::after {
 
 .world-label__status {
   margin-top: 3px;
-  font-size: 0.39rem !important;
+  font-size: 0.46rem !important;
   letter-spacing: 0.12em !important;
 }
 
-[data-anchor="menu-skills"] { --ox: -119px; --oy: -11px; text-align: right; }
-[data-anchor="menu-projects"] { --ox: 124px; --oy: -5px; }
-[data-anchor="menu-github"] { --ox: 103px; --oy: 43px; }
+[data-anchor="menu-skills"] { --ox: -145px; --oy: -30px; text-align: right; }
+[data-anchor="menu-projects"] { --ox: -138px; --oy: 90px; text-align: right; }
+[data-anchor="menu-github"] { --ox: 120px; --oy: 55px; }
 [data-anchor="skill-web"] { --ox: -80px; --oy: 88px; text-align: right; }
-[data-anchor="skill-python"] { --ox: 90px; --oy: -14px; }
-[data-anchor="skill-games"] { --ox: 96px; --oy: 28px; text-align: left; }
-[data-anchor="skill-systems"] { --ox: 96px; --oy: 18px; }
-[data-anchor="project-gamemaker"] { --oy: 112px; text-align: center; }
-[data-anchor="project-friv"] { --oy: 112px; text-align: center; }
+[data-anchor="skill-python"] { --ox: 105px; --oy: -14px; }
+[data-anchor="skill-games"] { --ox: 115px; --oy: 28px; text-align: left; }
+[data-anchor="skill-systems"] { --ox: 115px; --oy: 18px; }
+[data-anchor="project-gamemaker"] { --oy: 150px; text-align: center; }
+[data-anchor="project-friv"] { --oy: 150px; text-align: center; }
 [data-anchor="github-profile"] { --ox: 142px; --oy: 54px; }
 [data-anchor="skills-core"] { --ox: 124px; --oy: 58px; }
 [data-anchor="projects-core"] { --ox: -132px; --oy: 50px; text-align: right; }
 [data-anchor="github-home"] { --ox: -94px; --oy: 20px; text-align: right; }
 
 .world-label--menu > strong {
-  font-size: 0.72rem;
+  font-size: 0.96rem;
 }
 
 .world-label--skill > strong {
-  font-size: 0.86rem;
+  font-size: 1.04rem;
 }
 
 .world-label--project > strong {
-  font-size: 1.08rem;
+  font-size: 1.22rem;
 }
 
 .world-label--project > span {
-  font-size: 0.56rem;
+  font-size: 0.64rem;
 }
 
 .world-label--project > small {
-  font-size: 0.5rem;
+  font-size: 0.58rem;
 }
 
 .world-label--github-main > strong {
-  font-size: 1rem;
+  font-size: 1.16rem;
 }
 
 .world-label--repo > strong {
@@ -959,7 +959,7 @@ button.world-label.is-hovered::after {
 }
 
 .world-label--return > strong {
-  font-size: 0.78rem;
+  font-size: 0.94rem;
 }
 
 .world-label--return::before {
@@ -1041,7 +1041,7 @@ button.world-label.is-hovered::after {
 }
 
 .world-label:not(a):not(button) > * {
-  opacity: 0.62;
+  opacity: 0.9;
 }
 
 .cursor {

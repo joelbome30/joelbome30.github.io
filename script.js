@@ -177,34 +177,44 @@ function createSceneTextCanvas(text, kind, accent = "#5ff8ff") {
     context.lineJoin = "round";
     lines.forEach((line, index) => {
       const y = 64 + index * lineHeight;
-      context.shadowColor = index ? accent : "rgba(95, 248, 255, 0.32)";
-      context.shadowBlur = index ? 22 : 16;
-      context.fillStyle = index ? "rgba(226, 236, 255, 0.86)" : "rgba(248, 251, 255, 0.98)";
+      context.shadowBlur = 0;
+      context.strokeStyle = "rgba(1, 3, 12, 0.92)";
+      context.lineWidth = 12;
+      context.strokeText(line, 70, y);
+      context.shadowColor = accent;
+      context.shadowBlur = index ? 16 : 10;
+      context.fillStyle = index ? "rgba(246, 249, 255, 0.98)" : "rgba(255, 255, 255, 1)";
       context.fillText(line, 70, y);
       if (index) {
         context.shadowBlur = 0;
         context.strokeStyle = accent;
-        context.globalAlpha = 0.42;
-        context.lineWidth = 2.5;
+        context.globalAlpha = 0.72;
+        context.lineWidth = 2;
         context.strokeText(line, 70, y);
         context.globalAlpha = 1;
       }
     });
   } else if (kind === "eyebrow") {
     context.font = "500 43px 'DM Mono', monospace";
-    context.fillStyle = "rgba(236, 247, 255, 0.9)";
-    context.shadowColor = accent;
-    context.shadowBlur = 12;
+    context.fillStyle = "rgba(252, 254, 255, 1)";
+    context.shadowColor = "rgba(1, 3, 12, 0.96)";
+    context.shadowBlur = 18;
     drawTrackedText(context, text.toUpperCase(), 36, 64, 7);
     context.fillStyle = accent;
     context.fillRect(36, 128, 196, 3);
   } else {
-    context.font = "500 49px 'Space Grotesk', sans-serif";
+    context.font = "500 54px 'Space Grotesk', sans-serif";
     const lines = wrapSceneText(context, text, canvasTexture.width - 210).slice(0, 6);
-    context.fillStyle = "rgba(226, 237, 252, 0.9)";
-    context.shadowColor = "rgba(2, 3, 10, 0.85)";
-    context.shadowBlur = 18;
-    lines.forEach((line, index) => context.fillText(line, 132, 78 + index * 70));
+    context.lineJoin = "round";
+    lines.forEach((line, index) => {
+      const y = 78 + index * 72;
+      context.shadowBlur = 0;
+      context.strokeStyle = "rgba(1, 3, 12, 0.94)";
+      context.lineWidth = 10;
+      context.strokeText(line, 132, y);
+      context.fillStyle = "rgba(248, 251, 255, 0.98)";
+      context.fillText(line, 132, y);
+    });
     context.shadowBlur = 0;
     context.strokeStyle = accent;
     context.globalAlpha = 0.64;
@@ -242,6 +252,7 @@ function createSceneTextPlane(parent, text, kind, options) {
     alphaTest: 0.018,
     depthTest: true,
     depthWrite: false,
+    fog: false,
     side: THREE.DoubleSide,
     toneMapped: false,
   });
@@ -521,7 +532,9 @@ function createNode(parent, name, position, options = {}) {
   root.userData.anchorName = name;
   root.userData.action = options.action;
   root.userData.interactive = interactive;
-  root.userData.baseScale = options.scale || 1;
+  root.userData.desktopScale = options.scale || 1;
+  root.userData.mobileScale = options.mobileScale || root.userData.desktopScale;
+  root.userData.baseScale = root.userData.desktopScale;
   root.userData.baseZ = position.z;
   root.userData.phase = Math.random() * Math.PI * 2;
   root.scale.setScalar(root.userData.baseScale);
@@ -804,20 +817,20 @@ function createHeroSystem() {
   const nodes = [
     {
       name: "menu-skills",
-      position: new THREE.Vector3(2.05, 2.65, 0.2),
+      position: new THREE.Vector3(1.4, 3.25, 0.2),
       action: "paginas/habilidades.html",
       role: "cyan",
     },
     {
       name: "menu-projects",
-      position: new THREE.Vector3(5.25, -0.15, 0.15),
+      position: new THREE.Vector3(6.1, -0.2, 0.15),
       action: "paginas/proyectos.html",
       role: "violet",
       secondary: "pink",
     },
     {
       name: "menu-github",
-      position: new THREE.Vector3(2.25, -2.7, 0.4),
+      position: new THREE.Vector3(2.0, -3.4, 0.4),
       action: "paginas/github.html",
       role: "pink",
       secondary: "cyan",
@@ -830,7 +843,8 @@ function createHeroSystem() {
       action: data.action,
       role: data.role,
       secondary: data.secondary,
-      scale: 1.43,
+      scale: 2.05,
+      mobileScale: 1.18,
     });
   });
 }
@@ -850,10 +864,10 @@ function createSkillsSystem() {
   addReturnBeacon(core, 1.92);
 
   const skills = [
-    { name: "skill-web", position: new THREE.Vector3(-0.35, 1.55, 0.25), role: "cyan" },
-    { name: "skill-python", position: new THREE.Vector3(4.85, 1.95, -0.35), role: "blue" },
-    { name: "skill-games", position: new THREE.Vector3(-0.25, -1.9, 0.1), role: "pink" },
-    { name: "skill-systems", position: new THREE.Vector3(4.85, -2.05, 0.1), role: "acid" },
+    { name: "skill-web", position: new THREE.Vector3(0, 2.35, 0.25), role: "cyan" },
+    { name: "skill-python", position: new THREE.Vector3(5.0, 2.35, -0.35), role: "blue" },
+    { name: "skill-games", position: new THREE.Vector3(0, -2.4, 0.1), role: "pink" },
+    { name: "skill-systems", position: new THREE.Vector3(5.0, -2.4, 0.1), role: "acid" },
   ];
 
   skills.forEach((skill, index) => {
@@ -861,7 +875,8 @@ function createSkillsSystem() {
     createNode(group, skill.name, skill.position, {
       role: skill.role,
       secondary: index % 2 ? "violet" : "cyan",
-      scale: 1.18,
+      scale: 1.72,
+      mobileScale: 1.05,
     });
   });
 
@@ -974,16 +989,18 @@ function createProjectsSystem() {
   scene.add(group);
   sceneSystems.push(group);
 
-  const left = new THREE.Vector3(-4.75, -0.15, 0);
-  const right = new THREE.Vector3(1.05, 0.28, -0.35);
+  const left = new THREE.Vector3(-5.1, -0.15, 0);
+  const right = new THREE.Vector3(1.7, 0.28, -0.35);
   const gameMakerPortal = createPortal(group, "project-gamemaker", left, "https://github.com/joelbome30/JuegoGameMaker", ["cyan", "violet"]);
   const frivPortal = createPortal(group, "project-friv", right, "https://github.com/joelbome30/Juegos_Frivnt", ["pink", "violet"]);
   [gameMakerPortal, frivPortal].forEach((portal) => {
-    portal.userData.baseScale = 1.12;
+    portal.userData.desktopScale = 1.36;
+    portal.userData.mobileScale = 1.05;
+    portal.userData.baseScale = portal.userData.desktopScale;
     portal.scale.setScalar(portal.userData.baseScale);
   });
 
-  const seed = new THREE.Vector3(-1.75, -2.72, -0.6);
+  const seed = new THREE.Vector3(-1.75, -3.2, -0.6);
   const core = createOrganism(group, seed, 1.08, { primary: "acid", secondary: "cyan", nucleus: "pink" });
   makeOrganismInteractive(core, "projects-core", "../index.html");
   addReturnBeacon(core, 1.92);
@@ -1008,13 +1025,14 @@ function createGithubSystem() {
   });
   makeOrganismInteractive(core, "github-profile", "https://github.com/joelbome30");
 
-  const exitPosition = new THREE.Vector3(5.25, -2.05, 0.25);
+  const exitPosition = new THREE.Vector3(5.8, -2.5, 0.25);
   createBranch(group, center, exitPosition, "acid", -0.58);
   const exit = createNode(group, "github-home", exitPosition, {
     action: "../index.html",
     role: "acid",
     secondary: "cyan",
-    scale: 1.28,
+    scale: 1.68,
+    mobileScale: 1.08,
   });
   addReturnBeacon(exit, 0.67);
 }
@@ -1024,6 +1042,13 @@ function updateResponsiveLayout() {
   sceneSystems.forEach((system) => {
     system.position.y = mobile ? system.userData.mobileY : system.userData.baseY;
     system.position.x = mobile ? system.userData.mobileX : system.userData.desktopX;
+  });
+  animatedNodes.forEach((node) => {
+    node.userData.baseScale = mobile ? node.userData.mobileScale : node.userData.desktopScale;
+  });
+  portals.forEach((portal) => {
+    if (!portal.userData.desktopScale) return;
+    portal.userData.baseScale = mobile ? portal.userData.mobileScale : portal.userData.desktopScale;
   });
   if (sceneTextGroup) sceneTextGroup.visible = !mobile;
   body.classList.toggle("webgl-copy-ready", Boolean(sceneTextGroup && !mobile));
