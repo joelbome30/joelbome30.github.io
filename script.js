@@ -166,12 +166,13 @@ function drawTrackedText(context, text, x, y, tracking) {
 function createSceneTextCanvas(text, kind, accent = "#5ff8ff") {
   const canvasTexture = document.createElement("canvas");
   const context = canvasTexture.getContext("2d");
-  canvasTexture.width = kind === "heading" ? 2048 : 1536;
-  canvasTexture.height = kind === "eyebrow" ? 192 : kind === "heading" ? 640 : 576;
+  const isHeading = kind === "heading" || kind === "heading-line";
+  canvasTexture.width = isHeading ? 2048 : 1536;
+  canvasTexture.height = kind === "eyebrow" ? 192 : kind === "heading-line" ? 360 : kind === "heading" ? 640 : 576;
   context.clearRect(0, 0, canvasTexture.width, canvasTexture.height);
   context.textBaseline = "top";
 
-  if (kind === "heading") {
+  if (isHeading) {
     const lines = text.split("|").map((line) => line.trim()).filter(Boolean);
     const size = fitSceneHeading(context, lines, canvasTexture.width - 140);
     const lineHeight = size * 0.86;
@@ -254,10 +255,11 @@ function createSceneTextPlane(parent, text, kind, options) {
   texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
 
   const height = options.width * (source.height / source.width);
+  const opacity = options.opacity ?? 1;
   const material = new THREE.MeshBasicMaterial({
     map: texture,
     transparent: true,
-    opacity: options.opacity ?? 1,
+    opacity,
     alphaTest: 0.018,
     depthTest: false,
     depthWrite: false,
@@ -265,17 +267,33 @@ function createSceneTextPlane(parent, text, kind, options) {
     side: THREE.DoubleSide,
     toneMapped: false,
   });
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(options.width, height), material);
+  const geometry = new THREE.PlaneGeometry(options.width, height);
+  const plane = new THREE.Group();
+  const depthLayers = options.depthLayers ?? (kind.startsWith("heading") ? 6 : 2);
+
+  for (let layer = depthLayers; layer > 0; layer -= 1) {
+    const depthMaterial = material.clone();
+    depthMaterial.color.set(options.accent);
+    depthMaterial.opacity = opacity * (0.035 + layer * 0.012);
+    depthMaterial.alphaTest = 0.01;
+    const depthMesh = new THREE.Mesh(geometry, depthMaterial);
+    depthMesh.position.set(-layer * 0.013, layer * 0.009, -layer * 0.05);
+    depthMesh.renderOrder = 19 - layer * 0.01;
+    plane.add(depthMesh);
+  }
+
+  const mesh = new THREE.Mesh(geometry, material);
   mesh.renderOrder = 20;
-  mesh.position.set(...options.position);
-  mesh.rotation.set(...(options.rotation || [0, 0, 0]));
-  mesh.userData.basePosition = mesh.position.clone();
-  mesh.userData.baseRotation = mesh.rotation.clone();
-  mesh.userData.phase = options.phase || 0;
-  mesh.userData.drift = options.drift ?? 0.035;
-  sceneTextMeshes.push(mesh);
-  parent.add(mesh);
-  return mesh;
+  plane.add(mesh);
+  plane.position.set(...options.position);
+  plane.rotation.set(...(options.rotation || [0, 0, 0]));
+  plane.userData.basePosition = plane.position.clone();
+  plane.userData.baseRotation = plane.rotation.clone();
+  plane.userData.phase = options.phase || 0;
+  plane.userData.drift = options.drift ?? 0.035;
+  sceneTextMeshes.push(plane);
+  parent.add(plane);
+  return plane;
 }
 
 function createSceneCopy() {
@@ -289,21 +307,30 @@ function createSceneCopy() {
   const layouts = {
     skills: {
       accent: "#5ff8ff",
-      eyebrow: { position: [-5.62, 4.12, 0.15], width: 4.9, rotation: [0.01, -0.04, -0.015], phase: 0.4 },
-      heading: { position: [-5.15, 2.7, -0.48], width: 6.25, rotation: [-0.02, 0.065, -0.012], phase: 1.1 },
-      body: { position: [-5.2, -2.42, -0.72], width: 4.55, rotation: [0.015, -0.045, 0.006], phase: 2.2 },
+      eyebrow: { position: [4.45, 4.22, 0.15], width: 4.55, rotation: [0.01, 0.12, 0.022], phase: 0.4 },
+      headings: [
+        { line: 0, position: [-5.35, 3.15, -0.48], width: 5.55, rotation: [-0.02, 0.11, -0.028], phase: 1.1, depthLayers: 7 },
+        { line: 1, position: [3.25, -3.55, 0.35], width: 7.15, rotation: [0.035, -0.16, 0.035], phase: 1.75, depthLayers: 9 },
+      ],
+      body: { position: [-5.35, -2.25, -0.1], width: 4.35, rotation: [0.025, -0.12, -0.02], phase: 2.2, depthLayers: 3 },
     },
     projects: {
       accent: "#ff62d3",
-      eyebrow: { position: [-5.78, 4.18, 0.08], width: 4.65, rotation: [0, -0.04, -0.018], phase: 0.8 },
-      body: { position: [-5.35, 2.35, -0.5], width: 4.18, rotation: [0.02, -0.085, -0.012], phase: 2.7 },
-      heading: { position: [-5.18, -0.38, -0.82], width: 5.75, rotation: [-0.018, -0.095, 0.018], phase: 1.6 },
+      eyebrow: { position: [-5.7, 4.25, 0.08], width: 4.55, rotation: [0, -0.08, -0.025], phase: 0.8 },
+      headings: [
+        { line: 0, position: [5.25, 3.7, 0.2], width: 2.65, rotation: [0.03, -0.18, 0.065], phase: 1.35, depthLayers: 8 },
+        { line: 1, position: [-3.65, -3.55, -0.15], width: 7.35, rotation: [-0.035, 0.17, -0.045], phase: 1.9, depthLayers: 10 },
+      ],
+      body: { position: [-5.25, 2.35, 0.25], width: 4.15, rotation: [0.025, -0.15, -0.018], phase: 2.7, depthLayers: 3 },
     },
     github: {
       accent: "#a66cff",
-      eyebrow: { position: [-5.76, 4.18, 0.1], width: 4.7, rotation: [0, 0.045, -0.02], phase: 0.2 },
-      heading: { position: [-5.2, 2.25, -0.66], width: 5.7, rotation: [-0.02, 0.085, -0.014], phase: 1.4 },
-      body: { position: [-2.85, -3.3, -0.86], width: 4.25, rotation: [0.02, -0.12, 0.022], phase: 2.4 },
+      eyebrow: { position: [-5.65, 4.22, 0.1], width: 4.55, rotation: [0, 0.08, -0.025], phase: 0.2 },
+      headings: [
+        { line: 0, position: [-6.0, 0.6, 0.22], width: 2.35, rotation: [0.02, 0.22, -0.08], phase: 1.15, depthLayers: 8 },
+        { line: 1, position: [3.65, 3.5, -0.05], width: 6.35, rotation: [-0.02, -0.18, 0.035], phase: 1.75, depthLayers: 10 },
+      ],
+      body: { position: [3.75, -3.25, 0.18], width: 4.35, rotation: [0.035, -0.2, 0.035], phase: 2.4, depthLayers: 4 },
     },
   };
   const layout = layouts[page];
@@ -313,7 +340,11 @@ function createSceneCopy() {
   sceneTextGroup.userData.isSceneCopy = true;
   scene.add(sceneTextGroup);
   createSceneTextPlane(sceneTextGroup, eyebrow, "eyebrow", { ...layout.eyebrow, accent: layout.accent, opacity: 0.9, drift: 0.024 });
-  createSceneTextPlane(sceneTextGroup, titleLines.join("|"), "heading", { ...layout.heading, accent: layout.accent, drift: 0.032 });
+  (layout.headings || [{ line: 0, ...layout.heading }]).forEach((heading, index) => {
+    const line = titleLines[heading.line ?? index];
+    if (!line) return;
+    createSceneTextPlane(sceneTextGroup, line, "heading-line", { ...heading, accent: layout.accent, drift: 0.032 + index * 0.006 });
+  });
   createSceneTextPlane(sceneTextGroup, paragraph, "body", { ...layout.body, accent: layout.accent, opacity: 0.94, drift: 0.042 });
 }
 
@@ -587,11 +618,13 @@ function createConstellation(parent, points, connections, options = {}) {
 function createNode(parent, name, position, options = {}) {
   const role = options.role || "cyan";
   const interactive = Boolean(options.action);
+  const variant = options.variant || "orb";
   const root = new THREE.Group();
   root.position.copy(position);
   root.userData.anchorName = name;
   root.userData.action = options.action;
   root.userData.interactive = interactive;
+  root.userData.variant = variant;
   root.userData.desktopScale = options.scale || 1;
   root.userData.mobileScale = options.mobileScale || root.userData.desktopScale;
   root.userData.baseScale = root.userData.desktopScale;
@@ -599,8 +632,14 @@ function createNode(parent, name, position, options = {}) {
   root.userData.phase = Math.random() * Math.PI * 2;
   root.scale.setScalar(root.userData.baseScale);
 
+  const shellGeometry = {
+    crystal: new THREE.OctahedronGeometry(0.34, 1),
+    cube: new THREE.BoxGeometry(0.46, 0.46, 0.46, 3, 3, 3),
+    knot: new THREE.TorusKnotGeometry(0.2, 0.075, 72, 9, 2, 3),
+    binary: new THREE.SphereGeometry(0.25, 22, 16),
+  }[variant] || new THREE.IcosahedronGeometry(0.28, 2);
   const shell = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(0.28, 2),
+    shellGeometry,
     organismMaterial(role, options.secondary || "violet", interactive ? 1 : 0.58),
   );
   const nucleus = new THREE.Mesh(
@@ -621,9 +660,41 @@ function createNode(parent, name, position, options = {}) {
       depthWrite: false,
     }),
   );
-  ring.rotation.set(1.08, 0.2, 0.35);
+  if (variant === "crystal") {
+    shell.rotation.set(0.38, 0.42, 0.12);
+    ring.rotation.set(0.65, 0.78, 0.18);
+    ring.scale.set(0.78, 1.22, 1);
+  } else if (variant === "cube") {
+    shell.rotation.set(0.5, 0.68, 0.28);
+    ring.rotation.set(1.28, 0.4, 0.62);
+    ring.scale.set(1.18, 0.72, 1);
+  } else if (variant === "knot") {
+    shell.rotation.set(0.55, 0.2, 0.38);
+    ring.rotation.set(0.35, 1.05, 0.1);
+    ring.scale.set(1.24, 0.82, 1);
+  } else if (variant === "binary") {
+    ring.rotation.set(0.92, 0.65, -0.22);
+    ring.scale.set(1.3, 0.78, 1);
+  } else {
+    ring.rotation.set(1.08, 0.2, 0.35);
+  }
   const glow = createGlow(role, interactive ? 1.55 : 1.25, interactive ? 0.42 : 0.16);
   root.add(glow, shell, nucleus, ring);
+
+  if (variant === "binary") {
+    const companion = new THREE.Mesh(
+      new THREE.SphereGeometry(0.14, 18, 12),
+      organismMaterial(options.secondary || "violet", role, interactive ? 0.9 : 0.62),
+    );
+    companion.position.set(0.36, 0.16, 0.08);
+    const companionRing = new THREE.Mesh(
+      new THREE.TorusGeometry(0.22, 0.012, 6, 54),
+      basicMaterial(options.secondary || "violet", { opacity: 0.5, lightOpacity: 0.3, additive: true, depthWrite: false }),
+    );
+    companionRing.position.copy(companion.position);
+    companionRing.rotation.set(0.72, 0.45, -0.3);
+    root.add(companion, companionRing);
+  }
 
   if (interactive) {
     [shell, nucleus, ring].forEach((mesh) => {
@@ -913,9 +984,10 @@ function createSkillsSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
   group.userData.mobileY = -0.75;
-  group.userData.desktopX = 2.2;
+  group.userData.desktopX = -1.5;
   group.userData.mobileX = -1.15;
   group.userData.mobileScale = 0.68;
+  group.rotation.z = 0.12;
   scene.add(group);
   sceneSystems.push(group);
 
@@ -953,15 +1025,16 @@ function createSkillsSystem() {
   addReturnBeacon(core, 1.52);
 
   const skills = [
-    { name: "skill-web", position: skillPositions[0], role: "cyan" },
-    { name: "skill-python", position: skillPositions[1], role: "blue" },
-    { name: "skill-games", position: skillPositions[2], role: "pink" },
-    { name: "skill-systems", position: skillPositions[3], role: "acid" },
+    { name: "skill-web", position: skillPositions[0], role: "cyan", variant: "knot" },
+    { name: "skill-python", position: skillPositions[1], role: "blue", variant: "crystal" },
+    { name: "skill-games", position: skillPositions[2], role: "pink", variant: "binary" },
+    { name: "skill-systems", position: skillPositions[3], role: "acid", variant: "cube" },
   ];
 
   skills.forEach((skill, index) => {
     createNode(group, skill.name, skill.position, {
       role: skill.role,
+      variant: skill.variant,
       secondary: index % 2 ? "violet" : "cyan",
       scale: 2.45,
       mobileScale: 1.05,
@@ -1144,9 +1217,10 @@ function createProjectsSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
   group.userData.mobileY = -0.45;
-  group.userData.desktopX = 2.2;
+  group.userData.desktopX = 0.2;
   group.userData.mobileX = -1.25;
   group.userData.mobileScale = 0.62;
+  group.rotation.z = -0.11;
   scene.add(group);
   sceneSystems.push(group);
 
@@ -1215,9 +1289,10 @@ function createGithubSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
   group.userData.mobileY = -0.55;
-  group.userData.desktopX = 2.0;
+  group.userData.desktopX = -0.7;
   group.userData.mobileX = -1.15;
   group.userData.mobileScale = 0.68;
+  group.rotation.z = 0.08;
   scene.add(group);
   sceneSystems.push(group);
 
@@ -1243,6 +1318,7 @@ function createGithubSystem() {
     createNode(group, "cassiopeia-star-" + pointIndex, cassiopeiaPoints[pointIndex], {
       role: ["cyan", "blue", "violet"][index],
       secondary: ["violet", "cyan", "pink"][index],
+      variant: ["knot", "binary", "cube"][index],
       scale: index === 1 ? 1.24 : 1.38,
       mobileScale: 0.9,
     });
@@ -1261,6 +1337,7 @@ function createGithubSystem() {
     action: "../index.html",
     role: "acid",
     secondary: "cyan",
+    variant: "crystal",
     scale: 1.9,
     mobileScale: 1.08,
   });
