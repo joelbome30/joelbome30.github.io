@@ -937,10 +937,10 @@ button.world-label.is-hovered::after {
 [data-anchor="skill-systems"] { --ox: 152px; --oy: 0px; }
 [data-anchor="project-gamemaker"] { --ox: -165px; --oy: 158px; text-align: right; }
 [data-anchor="project-friv"] { --ox: -150px; --oy: -148px; text-align: right; }
-[data-anchor="github-profile"] { --ox: 0px; --oy: 158px; text-align: center; }
+[data-anchor="github-profile"] { --ox: 0px; --oy: 226px; text-align: center; }
 [data-anchor="skills-core"] { --ox: 0px; --oy: 108px; text-align: center; }
 [data-anchor="projects-core"] { --ox: -124px; --oy: -4px; text-align: right; }
-[data-anchor="github-home"] { --ox: -168px; --oy: 92px; text-align: right; }
+[data-anchor="github-home"] { --ox: 0px; --oy: -142px; text-align: center; }
 
 .world-label--menu > strong {
   font-size: 1.14rem;

@@ -325,12 +325,11 @@ function createSceneCopy() {
     },
     github: {
       accent: "#a66cff",
-      eyebrow: { position: [-5.65, 4.22, 0.1], width: 4.55, rotation: [0, 0.08, -0.025], phase: 0.2 },
+      eyebrow: { position: [-5.62, 4.28, 0.1], width: 4.55, rotation: [0, 0.055, -0.018], phase: 0.2 },
       headings: [
-        { line: 0, position: [-6.0, 0.6, 0.22], width: 2.35, rotation: [0.02, 0.22, -0.08], phase: 1.15, depthLayers: 8 },
-        { line: 1, position: [3.65, 3.5, -0.05], width: 6.35, rotation: [-0.02, -0.18, 0.035], phase: 1.75, depthLayers: 10 },
+        { join: true, position: [-0.3, -3.62, 0.28], width: 8.8, rotation: [0.025, -0.08, 0.012], phase: 1.45, depthLayers: 11 },
       ],
-      body: { position: [3.75, -3.25, 0.18], width: 4.35, rotation: [0.035, -0.2, 0.035], phase: 2.4, depthLayers: 4 },
+      body: { position: [-0.35, -2.0, 0.1], width: 5.65, rotation: [0.018, 0.06, -0.008], phase: 2.4, depthLayers: 4 },
     },
   };
   const layout = layouts[page];
@@ -341,7 +340,7 @@ function createSceneCopy() {
   scene.add(sceneTextGroup);
   createSceneTextPlane(sceneTextGroup, eyebrow, "eyebrow", { ...layout.eyebrow, accent: layout.accent, opacity: 0.9, drift: 0.024 });
   (layout.headings || [{ line: 0, ...layout.heading }]).forEach((heading, index) => {
-    const line = titleLines[heading.line ?? index];
+    const line = heading.join ? titleLines.join(" ") : titleLines[heading.line ?? index];
     if (!line) return;
     createSceneTextPlane(sceneTextGroup, line, "heading-line", { ...heading, accent: layout.accent, drift: 0.032 + index * 0.006 });
   });
@@ -1289,59 +1288,30 @@ function createGithubSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
   group.userData.mobileY = -0.55;
-  group.userData.desktopX = -0.7;
+  group.userData.desktopX = 0;
   group.userData.mobileX = -1.15;
   group.userData.mobileScale = 0.68;
-  group.rotation.z = 0.08;
   scene.add(group);
   sceneSystems.push(group);
 
-  const cassiopeiaPoints = [
-    new THREE.Vector3(-0.8, 1.7, -0.45),
-    new THREE.Vector3(0.7, -0.9, -0.2),
-    new THREE.Vector3(2.2, 1.4, -0.55),
-    new THREE.Vector3(3.8, -1.0, -0.28),
-    new THREE.Vector3(5.4, 1.8, 0.15),
-  ];
-  createConstellation(group, cassiopeiaPoints, [
-    [0, 1, "cyan"], [1, 2, "violet"], [2, 3, "pink"], [3, 4, "acid"],
-  ], {
-    role: "violet",
-    pointRoles: ["cyan", "blue", "pink", "violet", "acid"],
-    major: [0, 2, 4],
-    starSize: 0.1,
-    anchorName: "constellation-cassiopeia",
-    anchorPosition: new THREE.Vector3(2.25, 3.05, -0.55),
-  });
-
-  [0, 1, 3].forEach((pointIndex, index) => {
-    createNode(group, "cassiopeia-star-" + pointIndex, cassiopeiaPoints[pointIndex], {
-      role: ["cyan", "blue", "violet"][index],
-      secondary: ["violet", "cyan", "pink"][index],
-      variant: ["knot", "binary", "cube"][index],
-      scale: index === 1 ? 1.24 : 1.38,
-      mobileScale: 0.9,
-    });
-  });
-
-  const center = cassiopeiaPoints[2];
-  const core = createOrganism(group, center, 1.58, {
+  const center = new THREE.Vector3(-2.8, 2.0, -0.55);
+  const core = createOrganism(group, center, 1.68, {
     primary: "violet",
     secondary: "pink",
     nucleus: "cyan",
   });
   makeOrganismInteractive(core, "github-profile", "https://github.com/joelbome30");
 
-  const exitPosition = cassiopeiaPoints[4];
+  const exitPosition = new THREE.Vector3(5.1, 2.15, 0.15);
   const exit = createNode(group, "github-home", exitPosition, {
     action: "../index.html",
     role: "acid",
     secondary: "cyan",
     variant: "crystal",
-    scale: 1.9,
+    scale: 2.05,
     mobileScale: 1.08,
   });
-  addReturnBeacon(exit, 0.67);
+  addReturnBeacon(exit, 0.76);
 }
 
 function updateResponsiveLayout() {
