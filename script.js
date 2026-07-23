@@ -817,7 +817,7 @@ function createHeroSystem() {
   const nodes = [
     {
       name: "menu-skills",
-      position: new THREE.Vector3(1.4, 3.25, 0.2),
+      position: new THREE.Vector3(1.2, 3.5, 0.2),
       action: "paginas/habilidades.html",
       role: "cyan",
     },
@@ -830,7 +830,7 @@ function createHeroSystem() {
     },
     {
       name: "menu-github",
-      position: new THREE.Vector3(2.0, -3.4, 0.4),
+      position: new THREE.Vector3(1.8, -3.6, 0.4),
       action: "paginas/github.html",
       role: "pink",
       secondary: "cyan",
@@ -843,7 +843,7 @@ function createHeroSystem() {
       action: data.action,
       role: data.role,
       secondary: data.secondary,
-      scale: 2.05,
+      scale: 2.55,
       mobileScale: 1.18,
     });
   });
@@ -864,10 +864,10 @@ function createSkillsSystem() {
   addReturnBeacon(core, 1.92);
 
   const skills = [
-    { name: "skill-web", position: new THREE.Vector3(0, 2.35, 0.25), role: "cyan" },
-    { name: "skill-python", position: new THREE.Vector3(5.0, 2.35, -0.35), role: "blue" },
-    { name: "skill-games", position: new THREE.Vector3(0, -2.4, 0.1), role: "pink" },
-    { name: "skill-systems", position: new THREE.Vector3(5.0, -2.4, 0.1), role: "acid" },
+    { name: "skill-web", position: new THREE.Vector3(-0.1, 3.0, 0.25), role: "cyan" },
+    { name: "skill-python", position: new THREE.Vector3(5.8, 3.0, -0.35), role: "blue" },
+    { name: "skill-games", position: new THREE.Vector3(-0.1, -3.0, 0.1), role: "pink" },
+    { name: "skill-systems", position: new THREE.Vector3(5.8, -3.0, 0.1), role: "acid" },
   ];
 
   skills.forEach((skill, index) => {
@@ -875,7 +875,7 @@ function createSkillsSystem() {
     createNode(group, skill.name, skill.position, {
       role: skill.role,
       secondary: index % 2 ? "violet" : "cyan",
-      scale: 1.72,
+      scale: 2.65,
       mobileScale: 1.05,
     });
   });
@@ -989,12 +989,12 @@ function createProjectsSystem() {
   scene.add(group);
   sceneSystems.push(group);
 
-  const left = new THREE.Vector3(-5.1, -0.15, 0);
-  const right = new THREE.Vector3(1.7, 0.28, -0.35);
+  const left = new THREE.Vector3(-5.3, -0.15, 0);
+  const right = new THREE.Vector3(2.0, 0.28, -0.35);
   const gameMakerPortal = createPortal(group, "project-gamemaker", left, "https://github.com/joelbome30/JuegoGameMaker", ["cyan", "violet"]);
   const frivPortal = createPortal(group, "project-friv", right, "https://github.com/joelbome30/Juegos_Frivnt", ["pink", "violet"]);
   [gameMakerPortal, frivPortal].forEach((portal) => {
-    portal.userData.desktopScale = 1.36;
+    portal.userData.desktopScale = 1.55;
     portal.userData.mobileScale = 1.05;
     portal.userData.baseScale = portal.userData.desktopScale;
     portal.scale.setScalar(portal.userData.baseScale);
@@ -1025,13 +1025,13 @@ function createGithubSystem() {
   });
   makeOrganismInteractive(core, "github-profile", "https://github.com/joelbome30");
 
-  const exitPosition = new THREE.Vector3(5.8, -2.5, 0.25);
+  const exitPosition = new THREE.Vector3(6.2, -2.8, 0.25);
   createBranch(group, center, exitPosition, "acid", -0.58);
   const exit = createNode(group, "github-home", exitPosition, {
     action: "../index.html",
     role: "acid",
     secondary: "cyan",
-    scale: 1.68,
+    scale: 2.15,
     mobileScale: 1.08,
   });
   addReturnBeacon(exit, 0.67);
