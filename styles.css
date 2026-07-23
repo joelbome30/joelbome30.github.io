@@ -494,7 +494,7 @@ h1 span {
   color: var(--muted);
   font: 500 clamp(0.72rem, 1vw, 1rem)/1 "DM Mono", monospace;
   letter-spacing: 0.3em;
-  text-shadow: none;
+  text-shadow: 0 2px 5px rgba(0, 1, 7, 0.98), 0 0 14px rgba(0, 1, 7, 0.9);
 }
 
 .intro {
@@ -845,6 +845,22 @@ footer {
   pointer-events: auto;
 }
 
+body:not([data-page="home"]) .world-label {
+  padding: 8px 11px 9px;
+  border-left: 1px solid rgba(255, 255, 255, 0.58);
+  color: #fff;
+  background: linear-gradient(90deg, rgba(1, 3, 12, 0.88), rgba(1, 3, 12, 0.42) 72%, transparent);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.28);
+  mix-blend-mode: normal;
+}
+
+body:not([data-page="home"]) .world-label > span,
+body:not([data-page="home"]) .world-label > small,
+body:not([data-page="home"]) .world-label:not(a):not(button),
+body:not([data-page="home"]) .world-label:not(a):not(button) > span {
+  color: rgba(255, 255, 255, 0.92);
+}
+
 a.world-label,
 button.world-label {
   cursor: pointer;
@@ -919,11 +935,11 @@ button.world-label.is-hovered::after {
 [data-anchor="skill-python"] { --ox: 150px; --oy: 0px; }
 [data-anchor="skill-games"] { --ox: -168px; --oy: 0px; text-align: right; }
 [data-anchor="skill-systems"] { --ox: 152px; --oy: 0px; }
-[data-anchor="project-gamemaker"] { --oy: 142px; text-align: center; }
-[data-anchor="project-friv"] { --oy: 142px; text-align: center; }
+[data-anchor="project-gamemaker"] { --ox: -165px; --oy: 158px; text-align: right; }
+[data-anchor="project-friv"] { --ox: -150px; --oy: -148px; text-align: right; }
 [data-anchor="github-profile"] { --ox: 0px; --oy: 158px; text-align: center; }
 [data-anchor="skills-core"] { --ox: 0px; --oy: 108px; text-align: center; }
-[data-anchor="projects-core"] { --ox: -156px; --oy: -12px; text-align: right; }
+[data-anchor="projects-core"] { --ox: -124px; --oy: -4px; text-align: right; }
 [data-anchor="github-home"] { --ox: -168px; --oy: 92px; text-align: right; }
 [data-anchor="constellation-orion"] { --ox: 96px; --oy: -12px; }
 [data-anchor="constellation-gemini"] { --ox: 0px; --oy: -14px; text-align: center; }
@@ -938,7 +954,8 @@ button.world-label.is-hovered::after {
 }
 
 .world-label--project > strong {
-  font-size: 1.38rem;
+  font-size: 1.46rem;
+  line-height: 1.05;
 }
 
 .world-label--project > span {
@@ -946,7 +963,7 @@ button.world-label.is-hovered::after {
 }
 
 .world-label--project > small {
-  font-size: 0.66rem;
+  font-size: 0.7rem;
 }
 
 .world-label--github-main > strong {
@@ -980,7 +997,8 @@ button.world-label.is-hovered::after {
 }
 
 .world-label--return > strong {
-  font-size: 1.1rem;
+  font-size: 1.22rem;
+  letter-spacing: 0.13em;
 }
 
 .world-label--return::before {
@@ -1003,6 +1021,15 @@ button.world-label.is-hovered::after {
 .world-label--return > small {
   display: block;
   transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.28s ease, letter-spacing 0.28s ease, text-shadow 0.28s ease;
+}
+
+body:not([data-page="home"]) .copy {
+  mix-blend-mode: normal;
+  text-shadow: 0 3px 9px rgba(0, 1, 7, 0.98), 0 0 24px rgba(0, 1, 7, 0.9);
+}
+
+body:not([data-page="home"]) .copy--spatial > p:last-child {
+  background: linear-gradient(90deg, rgba(1, 3, 12, 0.78), rgba(1, 3, 12, 0.16));
 }
 
 .world-label--return:hover::before,
@@ -1336,7 +1363,7 @@ button.world-label.is-hovered::after {
   [data-anchor="skill-games"] { --ox: -54px; --oy: 8px; }
   [data-anchor="skill-systems"] { --ox: 50px; --oy: 6px; }
   [data-anchor="project-gamemaker"],
-  [data-anchor="project-friv"] { --oy: 74px; }
+  [data-anchor="project-friv"] { --ox: 0px; --oy: 74px; }
 
   .world-label--project > strong { font-size: 0.78rem; }
   .world-label--project > span { font-size: 0.43rem; }

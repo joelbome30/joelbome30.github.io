@@ -180,12 +180,12 @@ function createSceneTextCanvas(text, kind, accent = "#5ff8ff") {
     lines.forEach((line, index) => {
       const y = 64 + index * lineHeight;
       context.shadowBlur = 0;
-      context.strokeStyle = "rgba(1, 3, 12, 0.92)";
-      context.lineWidth = 12;
+      context.strokeStyle = "rgba(0, 1, 7, 0.98)";
+      context.lineWidth = 18;
       context.strokeText(line, 70, y);
       context.shadowColor = accent;
-      context.shadowBlur = index ? 16 : 10;
-      context.fillStyle = index ? "rgba(246, 249, 255, 0.98)" : "rgba(255, 255, 255, 1)";
+      context.shadowBlur = index ? 8 : 5;
+      context.fillStyle = "rgba(255, 255, 255, 1)";
       context.fillText(line, 70, y);
       if (index) {
         context.shadowBlur = 0;
@@ -197,24 +197,31 @@ function createSceneTextCanvas(text, kind, accent = "#5ff8ff") {
       }
     });
   } else if (kind === "eyebrow") {
-    context.font = "500 43px 'DM Mono', monospace";
+    context.font = "600 47px 'DM Mono', monospace";
+    context.lineJoin = "round";
+    context.strokeStyle = "rgba(0, 1, 7, 0.98)";
+    context.lineWidth = 8;
+    [...text.toUpperCase()].reduce((cursorX, character) => {
+      context.strokeText(character, cursorX, 62);
+      return cursorX + context.measureText(character).width + 7;
+    }, 36);
     context.fillStyle = "rgba(252, 254, 255, 1)";
-    context.shadowColor = "rgba(1, 3, 12, 0.96)";
-    context.shadowBlur = 18;
-    drawTrackedText(context, text.toUpperCase(), 36, 64, 7);
+    context.shadowColor = "rgba(0, 1, 7, 0.98)";
+    context.shadowBlur = 8;
+    drawTrackedText(context, text.toUpperCase(), 36, 62, 7);
     context.fillStyle = accent;
     context.fillRect(36, 128, 196, 3);
   } else {
-    context.font = "500 54px 'Space Grotesk', sans-serif";
+    context.font = "600 60px 'Space Grotesk', sans-serif";
     const lines = wrapSceneText(context, text, canvasTexture.width - 210).slice(0, 6);
     context.lineJoin = "round";
     lines.forEach((line, index) => {
-      const y = 78 + index * 72;
+      const y = 74 + index * 78;
       context.shadowBlur = 0;
-      context.strokeStyle = "rgba(1, 3, 12, 0.94)";
-      context.lineWidth = 10;
+      context.strokeStyle = "rgba(0, 1, 7, 0.98)";
+      context.lineWidth = 14;
       context.strokeText(line, 132, y);
-      context.fillStyle = "rgba(248, 251, 255, 0.98)";
+      context.fillStyle = "rgba(255, 255, 255, 1)";
       context.fillText(line, 132, y);
     });
     context.shadowBlur = 0;
@@ -252,13 +259,14 @@ function createSceneTextPlane(parent, text, kind, options) {
     transparent: true,
     opacity: options.opacity ?? 1,
     alphaTest: 0.018,
-    depthTest: true,
+    depthTest: false,
     depthWrite: false,
     fog: false,
     side: THREE.DoubleSide,
     toneMapped: false,
   });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(options.width, height), material);
+  mesh.renderOrder = 20;
   mesh.position.set(...options.position);
   mesh.rotation.set(...(options.rotation || [0, 0, 0]));
   mesh.userData.basePosition = mesh.position.clone();
@@ -287,15 +295,15 @@ function createSceneCopy() {
     },
     projects: {
       accent: "#ff62d3",
-      eyebrow: { position: [-5.72, 4.12, 0.08], width: 4.8, rotation: [0, 0.035, -0.014], phase: 0.8 },
-      heading: { position: [-5.25, 2.7, -0.62], width: 5.95, rotation: [-0.015, 0.065, -0.01], phase: 1.6 },
-      body: { position: [-5.3, -1.42, -0.88], width: 4.3, rotation: [0.018, 0.045, 0.008], phase: 2.7 },
+      eyebrow: { position: [-5.78, 4.18, 0.08], width: 4.65, rotation: [0, -0.04, -0.018], phase: 0.8 },
+      body: { position: [-5.35, 2.35, -0.5], width: 4.18, rotation: [0.02, -0.085, -0.012], phase: 2.7 },
+      heading: { position: [-5.18, -0.38, -0.82], width: 5.75, rotation: [-0.018, -0.095, 0.018], phase: 1.6 },
     },
     github: {
       accent: "#a66cff",
-      eyebrow: { position: [-5.58, 4.08, 0.1], width: 4.85, rotation: [0, -0.035, -0.016], phase: 0.2 },
-      heading: { position: [-5.16, 2.72, -0.66], width: 5.8, rotation: [-0.02, 0.07, -0.012], phase: 1.4 },
-      body: { position: [-5.12, -2.18, -0.86], width: 4.45, rotation: [0.016, -0.05, 0.008], phase: 2.4 },
+      eyebrow: { position: [-5.76, 4.18, 0.1], width: 4.7, rotation: [0, 0.045, -0.02], phase: 0.2 },
+      heading: { position: [-5.2, 2.25, -0.66], width: 5.7, rotation: [-0.02, 0.085, -0.014], phase: 1.4 },
+      body: { position: [-2.85, -3.3, -0.86], width: 4.25, rotation: [0.02, -0.12, 0.022], phase: 2.4 },
     },
   };
   const layout = layouts[page];
@@ -1003,13 +1011,15 @@ const portalFragment = [
   "}",
 ].join("\n");
 
-function createPortal(parent, name, position, action, roles = ["cyan", "violet"]) {
+function createPortal(parent, name, position, action, roles = ["cyan", "violet"], options = {}) {
   const root = new THREE.Group();
   root.position.copy(position);
   root.userData.anchorName = name;
   root.userData.action = action;
   root.userData.baseScale = 1;
   root.userData.phase = Math.random() * Math.PI * 2;
+  root.userData.variant = options.variant || "spiral";
+  root.userData.baseRotationZ = options.rotation || 0;
 
   const diskMaterial = new THREE.ShaderMaterial({
     uniforms: {
@@ -1031,6 +1041,11 @@ function createPortal(parent, name, position, action, roles = ["cyan", "violet"]
   diskMaterial.userData.lightOpacity = 0.64;
 
   const disk = new THREE.Mesh(new THREE.CircleGeometry(1.42, 90), diskMaterial);
+  if (root.userData.variant === "lenticular") {
+    disk.scale.set(1.55, 0.48, 1);
+  } else if (root.userData.variant === "helix") {
+    disk.scale.set(0.64, 0.64, 1);
+  }
   root.add(disk);
 
   for (let index = 0; index < 4; index += 1) {
@@ -1043,17 +1058,82 @@ function createPortal(parent, name, position, action, roles = ["cyan", "violet"]
         depthWrite: false,
       }),
     );
-    ring.rotation.x = (index - 1.5) * 0.08;
-    ring.rotation.y = (index - 1.5) * 0.09;
+    if (root.userData.variant === "lenticular") {
+      ring.scale.set(1.5 - index * 0.06, 0.43 + index * 0.055, 1);
+      ring.rotation.x = 0.12 + index * 0.045;
+      ring.rotation.y = (index - 1.5) * 0.055;
+      ring.rotation.z = index % 2 ? 0.055 : -0.045;
+    } else if (root.userData.variant === "helix") {
+      ring.scale.set(0.72 + index * 0.08, 1.08 - index * 0.07, 1);
+      ring.rotation.x = 0.88 + index * 0.28;
+      ring.rotation.y = 0.35 + index * 0.24;
+      ring.rotation.z = index * 0.38;
+    } else {
+      ring.rotation.x = (index - 1.5) * 0.08;
+      ring.rotation.y = (index - 1.5) * 0.09;
+    }
     ring.userData.portalRing = index;
     ring.userData.hitRoot = root;
     interactiveMeshes.push(ring);
     root.add(ring);
   }
 
+  if (root.userData.variant === "lenticular") {
+    const lane = new THREE.Mesh(
+      new THREE.BoxGeometry(4.35, 0.055, 0.055),
+      basicMaterial(roles[0], { opacity: 0.88, lightOpacity: 0.54, additive: true, depthWrite: false }),
+    );
+    lane.userData.hitRoot = root;
+    interactiveMeshes.push(lane);
+    root.add(lane);
+
+    [-1, 1].forEach((direction) => {
+      const jetPoints = [
+        new THREE.Vector3(0, direction * 0.15, -0.05),
+        new THREE.Vector3(direction * 0.12, direction * 0.85, 0),
+        new THREE.Vector3(direction * 0.28, direction * 1.55, 0.08),
+      ];
+      const jet = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(jetPoints), 24, 0.018, 5, false),
+        basicMaterial(roles[1], { opacity: 0.52, lightOpacity: 0.3, additive: true, depthWrite: false }),
+      );
+      root.add(jet);
+    });
+  }
+
+  if (root.userData.variant === "helix") {
+    for (let arm = 0; arm < 3; arm += 1) {
+      const armPoints = [];
+      for (let index = 0; index < 72; index += 1) {
+        const t = index / 71;
+        const radius = 0.16 + t * 1.72;
+        const angle = t * Math.PI * 4.6 + arm * (Math.PI * 2 / 3);
+        armPoints.push(new THREE.Vector3(
+          Math.cos(angle) * radius,
+          Math.sin(angle) * radius * 0.58,
+          Math.sin(t * Math.PI * 3 + arm) * 0.3,
+        ));
+      }
+      const armMesh = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(armPoints), 72, 0.025, 5, false),
+        basicMaterial(arm % 2 ? roles[1] : roles[0], {
+          opacity: 0.76,
+          lightOpacity: 0.42,
+          additive: true,
+          depthWrite: false,
+        }),
+      );
+      armMesh.userData.hitRoot = root;
+      interactiveMeshes.push(armMesh);
+      root.add(armMesh);
+    }
+  }
+
   disk.userData.hitRoot = root;
   interactiveMeshes.push(disk);
-  root.add(createGlow(roles[0], 5.3, 0.35));
+  const portalGlow = createGlow(roles[0], root.userData.variant === "lenticular" ? 6.2 : 4.7, 0.32);
+  if (root.userData.variant === "lenticular") portalGlow.scale.set(6.2, 2.45, 1);
+  root.add(portalGlow);
   anchors.set(name, root);
   portals.push(root);
   parent.add(root);
@@ -1070,22 +1150,22 @@ function createProjectsSystem() {
   scene.add(group);
   sceneSystems.push(group);
 
-  const left = new THREE.Vector3(-0.4, 2.25, 0);
-  const right = new THREE.Vector3(5.0, 2.25, -0.35);
-  const seed = new THREE.Vector3(2.2, -3.35, -0.6);
+  const left = new THREE.Vector3(0.05, 1.85, 0);
+  const right = new THREE.Vector3(4.55, -0.72, -0.35);
+  const seed = new THREE.Vector3(1.95, -3.35, -0.6);
   const geminiPoints = [
     left,
-    new THREE.Vector3(-0.55, 0.65, -0.35),
-    new THREE.Vector3(-1.75, -0.05, -0.5),
-    new THREE.Vector3(-0.35, -1.0, -0.45),
-    new THREE.Vector3(-1.25, -2.85, -0.55),
-    new THREE.Vector3(0.45, -2.9, -0.5),
+    new THREE.Vector3(-0.35, 0.45, -0.35),
+    new THREE.Vector3(-1.4, -0.2, -0.5),
+    new THREE.Vector3(0.15, -0.92, -0.45),
+    new THREE.Vector3(-0.75, -2.75, -0.55),
+    new THREE.Vector3(0.85, -2.65, -0.5),
     right,
-    new THREE.Vector3(4.75, 0.65, -0.38),
-    new THREE.Vector3(6.0, -0.1, -0.55),
-    new THREE.Vector3(4.55, -1.0, -0.46),
-    new THREE.Vector3(3.75, -2.9, -0.55),
-    new THREE.Vector3(5.35, -2.8, -0.5),
+    new THREE.Vector3(4.25, 0.05, -0.38),
+    new THREE.Vector3(5.55, 0.72, -0.55),
+    new THREE.Vector3(4.2, -1.65, -0.46),
+    new THREE.Vector3(3.45, -3.15, -0.55),
+    new THREE.Vector3(5.05, -3.0, -0.5),
     seed,
   ];
   createConstellation(group, geminiPoints, [
@@ -1098,14 +1178,30 @@ function createProjectsSystem() {
     major: [0, 6, 12],
     starSize: 0.08,
     anchorName: "constellation-gemini",
-    anchorPosition: new THREE.Vector3(2.3, 3.45, -0.55),
+    anchorPosition: new THREE.Vector3(3.15, 3.45, -0.55),
   });
 
-  const gameMakerPortal = createPortal(group, "project-gamemaker", left, "https://github.com/joelbome30/JuegoGameMaker", ["cyan", "violet"]);
-  const frivPortal = createPortal(group, "project-friv", right, "https://github.com/joelbome30/Juegos_Frivnt", ["pink", "violet"]);
+  const gameMakerPortal = createPortal(
+    group,
+    "project-gamemaker",
+    left,
+    "https://github.com/joelbome30/JuegoGameMaker",
+    ["cyan", "violet"],
+    { variant: "lenticular", rotation: -0.28 },
+  );
+  const frivPortal = createPortal(
+    group,
+    "project-friv",
+    right,
+    "https://github.com/joelbome30/Juegos_Frivnt",
+    ["pink", "violet"],
+    { variant: "helix", rotation: 0.38 },
+  );
+  gameMakerPortal.userData.desktopScale = 1.18;
+  gameMakerPortal.userData.mobileScale = 0.94;
+  frivPortal.userData.desktopScale = 1.08;
+  frivPortal.userData.mobileScale = 0.9;
   [gameMakerPortal, frivPortal].forEach((portal) => {
-    portal.userData.desktopScale = 1.18;
-    portal.userData.mobileScale = 1.05;
     portal.userData.baseScale = portal.userData.desktopScale;
     portal.scale.setScalar(portal.userData.baseScale);
   });
@@ -1394,7 +1490,7 @@ function animate() {
     const targetScale = baseScale * (hovered ? 1.14 : 1);
     const scale = lerp(portal.scale.x, targetScale, smooth * 0.78);
     portal.scale.setScalar(scale);
-    portal.rotation.z = Math.sin(elapsed * 0.24 + index) * 0.035;
+    portal.rotation.z = (portal.userData.baseRotationZ || 0) + Math.sin(elapsed * 0.24 + index) * 0.035;
     portal.children.forEach((child) => {
       if (child.material?.uniforms?.uTime) child.material.uniforms.uTime.value = elapsed + index * 0.7;
       if (Number.isInteger(child.userData.portalRing)) {
