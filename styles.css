@@ -931,15 +931,15 @@ button.world-label.is-hovered::after {
 [data-anchor="menu-skills"] { --ox: -175px; --oy: -48px; text-align: right; }
 [data-anchor="menu-projects"] { --ox: -165px; --oy: 112px; text-align: right; }
 [data-anchor="menu-github"] { --ox: 148px; --oy: 70px; }
-[data-anchor="skill-web"] { --ox: 126px; --oy: 92px; text-align: left; }
-[data-anchor="skill-python"] { --ox: 150px; --oy: 0px; }
-[data-anchor="skill-games"] { --ox: 142px; --oy: -42px; text-align: left; }
-[data-anchor="skill-systems"] { --ox: 152px; --oy: 0px; }
-[data-anchor="project-gamemaker"] { --ox: -165px; --oy: 158px; text-align: right; }
-[data-anchor="project-friv"] { --ox: -150px; --oy: -148px; text-align: right; }
+[data-anchor="skill-web"] { --ox: 135px; --oy: 75px; text-align: left; }
+[data-anchor="skill-python"] { --ox: 140px; --oy: 0px; }
+[data-anchor="skill-games"] { --ox: 145px; --oy: -20px; text-align: left; }
+[data-anchor="skill-systems"] { --ox: -145px; --oy: 0px; text-align: right; }
+[data-anchor="project-gamemaker"] { --ox: 0px; --oy: 130px; text-align: center; }
+[data-anchor="project-friv"] { --ox: -150px; --oy: -105px; text-align: right; }
 [data-anchor="github-profile"] { --ox: 0px; --oy: 226px; text-align: center; }
-[data-anchor="skills-core"] { --ox: 0px; --oy: 108px; text-align: center; }
-[data-anchor="projects-core"] { --ox: -124px; --oy: -4px; text-align: right; }
+[data-anchor="skills-core"] { --ox: 0px; --oy: 120px; text-align: center; }
+[data-anchor="projects-core"] { --ox: -135px; --oy: 0px; text-align: right; }
 [data-anchor="github-home"] { --ox: 0px; --oy: -142px; text-align: center; }
 
 .world-label--menu > strong {

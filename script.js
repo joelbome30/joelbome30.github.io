@@ -307,21 +307,20 @@ function createSceneCopy() {
   const layouts = {
     skills: {
       accent: "#5ff8ff",
-      eyebrow: { position: [4.45, 4.22, 0.15], width: 4.55, rotation: [0.01, 0.12, 0.022], phase: 0.4 },
+      eyebrow: { position: [-5.7, 4.28, 0.15], width: 4.45, rotation: [0.01, 0.055, -0.018], phase: 0.4 },
       headings: [
-        { line: 0, position: [-5.35, 3.15, -0.48], width: 5.55, rotation: [-0.02, 0.11, -0.028], phase: 1.1, depthLayers: 7 },
-        { line: 1, position: [3.25, -3.55, 0.35], width: 7.15, rotation: [0.035, -0.16, 0.035], phase: 1.75, depthLayers: 9 },
+        { join: true, position: [0.25, 3.65, 0.24], width: 9, rotation: [-0.02, -0.08, -0.075], phase: 1.25, depthLayers: 10 },
       ],
-      body: { position: [-5.35, -2.25, -0.1], width: 4.35, rotation: [0.025, -0.12, -0.02], phase: 2.2, depthLayers: 3 },
+      body: { position: [-5.25, -2.95, 0.08], width: 4.25, rotation: [0.025, -0.1, -0.015], phase: 2.2, depthLayers: 3 },
     },
     projects: {
       accent: "#ff62d3",
-      eyebrow: { position: [-5.7, 4.25, 0.08], width: 4.55, rotation: [0, -0.08, -0.025], phase: 0.8 },
+      eyebrow: { position: [-5.72, 4.28, 0.08], width: 4.5, rotation: [0, -0.065, -0.022], phase: 0.8 },
       headings: [
-        { line: 0, position: [5.25, 3.7, 0.2], width: 2.65, rotation: [0.03, -0.18, 0.065], phase: 1.35, depthLayers: 8 },
-        { line: 1, position: [-3.65, -3.55, -0.15], width: 7.35, rotation: [-0.035, 0.17, -0.045], phase: 1.9, depthLayers: 10 },
+        { line: 0, position: [-5.05, -2.55, 0.28], width: 2.85, rotation: [0.03, 0.16, -0.06], phase: 1.35, depthLayers: 8 },
+        { line: 1, position: [-0.45, -3.62, 0.08], width: 7.3, rotation: [-0.03, -0.1, 0.012], phase: 1.9, depthLayers: 10 },
       ],
-      body: { position: [-5.25, 2.35, 0.25], width: 4.15, rotation: [0.025, -0.15, -0.018], phase: 2.7, depthLayers: 3 },
+      body: { position: [-5.3, 2.55, 0.22], width: 4, rotation: [0.025, -0.13, -0.016], phase: 2.7, depthLayers: 3 },
     },
     github: {
       accent: "#a66cff",
@@ -983,51 +982,26 @@ function createSkillsSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
   group.userData.mobileY = -0.75;
-  group.userData.desktopX = -1.5;
+  group.userData.desktopX = 0;
   group.userData.mobileX = -1.15;
   group.userData.mobileScale = 0.68;
-  group.rotation.z = 0.12;
   scene.add(group);
   sceneSystems.push(group);
 
-  const center = new THREE.Vector3(2.0, 0.05, -0.2);
-  const skillPositions = [
-    new THREE.Vector3(-0.7, 2.75, 0.25),
-    new THREE.Vector3(4.8, 2.45, -0.35),
-    new THREE.Vector3(-0.2, -2.75, 0.1),
-    new THREE.Vector3(5.1, -2.5, 0.1),
-  ];
-  const orionPoints = [
-    skillPositions[0],
-    skillPositions[1],
-    skillPositions[2],
-    skillPositions[3],
-    new THREE.Vector3(0.95, 0.38, -0.48),
-    center,
-    new THREE.Vector3(3.05, -0.28, -0.44),
-    new THREE.Vector3(2.0, 3.55, -0.62),
-  ];
-  createConstellation(group, orionPoints, [
-    [0, 1, "cyan"], [0, 4, "cyan"], [4, 5, "violet"], [5, 6, "violet"],
-    [6, 1, "blue"], [4, 2, "pink"], [6, 3, "acid"], [2, 3, "violet"], [7, 5, "cyan"],
-  ], {
-    role: "cyan",
-    pointRoles: ["cyan", "blue", "pink", "acid", "cyan", "violet", "blue", "cyan"],
-    major: [4, 5, 6, 7],
-    starSize: 0.085,
-    anchorName: "constellation-orion",
-    anchorPosition: new THREE.Vector3(2.0, 3.72, -0.5),
+  const returnPosition = new THREE.Vector3(4.85, 2.55, -0.2);
+  const core = createOrganism(group, returnPosition, 1, {
+    primary: "violet",
+    secondary: "cyan",
+    nucleus: "acid",
   });
-
-  const core = createOrganism(group, center, 1.02, { primary: "violet", secondary: "cyan", nucleus: "acid" });
   makeOrganismInteractive(core, "skills-core", "../index.html");
   addReturnBeacon(core, 1.52);
 
   const skills = [
-    { name: "skill-web", position: skillPositions[0], role: "cyan", variant: "knot" },
-    { name: "skill-python", position: skillPositions[1], role: "blue", variant: "crystal" },
-    { name: "skill-games", position: skillPositions[2], role: "pink", variant: "binary" },
-    { name: "skill-systems", position: skillPositions[3], role: "acid", variant: "cube" },
+    { name: "skill-python", position: new THREE.Vector3(-5.25, 2.45, -0.35), role: "blue", variant: "crystal", scale: 2 },
+    { name: "skill-web", position: new THREE.Vector3(-2.35, 0.2, 0.25), role: "cyan", variant: "knot", scale: 2.3 },
+    { name: "skill-games", position: new THREE.Vector3(1.75, -0.62, 0.1), role: "pink", variant: "binary", scale: 2.35 },
+    { name: "skill-systems", position: new THREE.Vector3(4.75, -2.35, 0.1), role: "acid", variant: "cube", scale: 2.15 },
   ];
 
   skills.forEach((skill, index) => {
@@ -1035,25 +1009,11 @@ function createSkillsSystem() {
       role: skill.role,
       variant: skill.variant,
       secondary: index % 2 ? "violet" : "cyan",
-      scale: 2.45,
+      scale: skill.scale,
       mobileScale: 1.05,
     });
   });
 
-  // Una hélice corta une el centro: parece ADN, pero también una ruta de aprendizaje.
-  const helixA = [];
-  const helixB = [];
-  for (let index = 0; index < 34; index += 1) {
-    const t = index / 33;
-    const y = -2.15 + t * 4.3;
-    const angle = t * Math.PI * 5;
-    helixA.push(new THREE.Vector3(center.x + Math.cos(angle) * 0.36, y, -1.1 + Math.sin(angle) * 0.2));
-    helixB.push(new THREE.Vector3(center.x + Math.cos(angle + Math.PI) * 0.36, y, -1.1 + Math.sin(angle + Math.PI) * 0.2));
-  }
-  group.add(
-    new THREE.Line(new THREE.BufferGeometry().setFromPoints(helixA), lineMaterial("cyan", 0.44, 0.2)),
-    new THREE.Line(new THREE.BufferGeometry().setFromPoints(helixB), lineMaterial("violet", 0.44, 0.2)),
-  );
 }
 
 const portalVertex = [
@@ -1216,44 +1176,15 @@ function createProjectsSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
   group.userData.mobileY = -0.45;
-  group.userData.desktopX = 0.2;
+  group.userData.desktopX = 0;
   group.userData.mobileX = -1.25;
   group.userData.mobileScale = 0.62;
-  group.rotation.z = -0.11;
   scene.add(group);
   sceneSystems.push(group);
 
-  const left = new THREE.Vector3(0.05, 1.85, 0);
-  const right = new THREE.Vector3(4.55, -0.72, -0.35);
-  const seed = new THREE.Vector3(1.95, -3.35, -0.6);
-  const geminiPoints = [
-    left,
-    new THREE.Vector3(-0.35, 0.45, -0.35),
-    new THREE.Vector3(-1.4, -0.2, -0.5),
-    new THREE.Vector3(0.15, -0.92, -0.45),
-    new THREE.Vector3(-0.75, -2.75, -0.55),
-    new THREE.Vector3(0.85, -2.65, -0.5),
-    right,
-    new THREE.Vector3(4.25, 0.05, -0.38),
-    new THREE.Vector3(5.55, 0.72, -0.55),
-    new THREE.Vector3(4.2, -1.65, -0.46),
-    new THREE.Vector3(3.45, -3.15, -0.55),
-    new THREE.Vector3(5.05, -3.0, -0.5),
-    seed,
-  ];
-  createConstellation(group, geminiPoints, [
-    [0, 1, "cyan"], [1, 2, "cyan"], [1, 3, "cyan"], [3, 4, "cyan"], [3, 5, "cyan"],
-    [6, 7, "pink"], [7, 8, "pink"], [7, 9, "pink"], [9, 10, "pink"], [9, 11, "pink"],
-    [1, 7, "violet"], [5, 12, "acid"], [12, 10, "acid"],
-  ], {
-    role: "violet",
-    pointRoles: ["cyan", "cyan", "blue", "cyan", "blue", "cyan", "pink", "pink", "violet", "pink", "violet", "pink", "acid"],
-    major: [0, 6, 12],
-    starSize: 0.08,
-    anchorName: "constellation-gemini",
-    anchorPosition: new THREE.Vector3(3.15, 3.45, -0.55),
-  });
-
+  const left = new THREE.Vector3(-1.35, 0.75, 0);
+  const right = new THREE.Vector3(4.15, -1.55, -0.35);
+  const seed = new THREE.Vector3(4.3, 2.55, -0.6);
   const gameMakerPortal = createPortal(
     group,
     "project-gamemaker",
@@ -1270,9 +1201,9 @@ function createProjectsSystem() {
     ["pink", "violet"],
     { variant: "helix", rotation: 0.38 },
   );
-  gameMakerPortal.userData.desktopScale = 1.18;
+  gameMakerPortal.userData.desktopScale = 1.25;
   gameMakerPortal.userData.mobileScale = 0.94;
-  frivPortal.userData.desktopScale = 1.08;
+  frivPortal.userData.desktopScale = 1.15;
   frivPortal.userData.mobileScale = 0.9;
   [gameMakerPortal, frivPortal].forEach((portal) => {
     portal.userData.baseScale = portal.userData.desktopScale;
