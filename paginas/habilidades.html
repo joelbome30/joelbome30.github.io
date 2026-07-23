@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Habilidades y tecnologías que Joel ha aprendido." />
+  <meta name="theme-color" content="#02030a" />
+  <title>Habilidades — Joel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/" } }
+  </script>
+</head>
+<body data-theme="dark" data-page="skills">
+  <div class="boot" id="boot"><div class="boot__cell"><i></i><i></i><i></i><span>01</span></div><p>DESPLEGANDO HABILIDADES</p><div class="boot__progress"><i></i></div></div>
+  <canvas id="universe" aria-label="Árbol tridimensional de habilidades"></canvas>
+  <div class="atmosphere" aria-hidden="true"></div><div class="film-grain" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div><div class="page-wipe" aria-hidden="true"></div>
+
+  <div class="world-labels">
+    <a class="world-label world-label--return" data-anchor="skills-core" data-action="../index.html" href="../index.html"><span>PORTAL DE RETORNO</span><strong>REGRESAR</strong><small>SIGUE LA ÓRBITA ↶</small></a>
+    <div class="world-label world-label--skill" data-anchor="skill-web"><span>01</span><strong>WEB</strong><small>HTML · CSS · JAVASCRIPT</small><small class="world-label__status">○ SOLO INFORMACIÓN</small></div>
+    <div class="world-label world-label--skill" data-anchor="skill-python"><span>02</span><strong>PYTHON</strong><small>SCRIPTS · LÓGICA · IDEAS</small><small class="world-label__status">○ SOLO INFORMACIÓN</small></div>
+    <div class="world-label world-label--skill" data-anchor="skill-games"><span>03</span><strong>VIDEOJUEGOS</strong><small>GAMEMAKER · GODOT</small><small class="world-label__status">○ SOLO INFORMACIÓN</small></div>
+    <div class="world-label world-label--skill" data-anchor="skill-systems"><span>04</span><strong>SISTEMAS</strong><small>LINUX · GIT · CUSTOM ROMS</small><small class="world-label__status">○ SOLO INFORMACIÓN</small></div>
+  </div>
+
+  <main class="single-page">
+    <section class="chapter chapter--skills is-active">
+      <div class="copy copy--subpage copy--spatial copy--skills">
+        <p class="eyebrow">01 / ÁRBOL DE EVOLUCIÓN</p>
+        <h2>COSAS QUE<br /><em>HE APRENDIDO</em></h2>
+        <p>No aprendí todo siguiendo una línea recta. Voy saltando entre código, sistemas y videojuegos; cada cosa nueva termina conectándose con la anterior.</p>
+      </div>
+      <p class="page-hint" aria-hidden="true">LA ÓRBITA CON FLECHA MARCA EL CAMINO DE REGRESO</p>
+    </section>
+  </main>
+  <div class="cursor" id="cursor" aria-hidden="true"><i></i></div>
+  <script>window.setTimeout(() => document.getElementById("boot")?.classList.add("is-finished"), 5000);</script>
+  <script type="module" src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Proyectos y experimentos de programación de Joel." />
+  <meta name="theme-color" content="#02030a" />
+  <title>Proyectos — Joel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/" } }
+  </script>
+</head>
+<body data-theme="dark" data-page="projects">
+  <div class="boot" id="boot"><div class="boot__cell"><i></i><i></i><i></i><span>02</span></div><p>ABRIENDO PORTALES</p><div class="boot__progress"><i></i></div></div>
+  <canvas id="universe" aria-label="Portales tridimensionales hacia los proyectos"></canvas>
+  <div class="atmosphere" aria-hidden="true"></div><div class="film-grain" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div><div class="page-wipe" aria-hidden="true"></div>
+
+  <div class="world-labels">
+    <a class="world-label world-label--return" data-anchor="projects-core" data-action="../index.html" href="../index.html"><span>PORTAL DE RETORNO</span><strong>REGRESAR</strong><small>SIGUE LA ÓRBITA ↶</small></a>
+    <a class="world-label world-label--project" data-anchor="project-gamemaker" data-action="https://github.com/joelbome30/JuegoGameMaker" href="https://github.com/joelbome30/JuegoGameMaker" target="_blank" rel="noreferrer"><span>EXPEDICIÓN 01</span><strong>JUEGO GAMEMAKER</strong><small>ABRIR REPOSITORIO ↗</small></a>
+    <a class="world-label world-label--project" data-anchor="project-friv" data-action="https://github.com/joelbome30/Juegos_Frivnt" href="https://github.com/joelbome30/Juegos_Frivnt" target="_blank" rel="noreferrer"><span>EXPEDICIÓN 02</span><strong>JUEGOS FRIVNT</strong><small>ABRIR REPOSITORIO ↗</small></a>
+  </div>
+
+  <main class="single-page">
+    <section class="chapter chapter--projects is-active">
+      <div class="copy copy--subpage copy--projects copy--spatial">
+        <p class="eyebrow">02 / MUNDOS EN CONSTRUCCIÓN</p>
+        <h2>MIS<br /><em>PROYECTOS</em></h2>
+        <p>No los veo como productos terminados. Son lugares donde pruebo ideas, me equivoco, arreglo cosas y descubro qué quiero construir después.</p>
+      </div>
+      <p class="page-hint page-hint--left" aria-hidden="true">PORTALES PEQUEÑOS: REPOSITORIOS · ÓRBITA CON FLECHA: REGRESAR</p>
+    </section>
+  </main>
+  <div class="cursor" id="cursor" aria-hidden="true"><i></i></div>
+  <script>window.setTimeout(() => document.getElementById("boot")?.classList.add("is-finished"), 5000);</script>
+  <script type="module" src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Portal tridimensional hacia el perfil de GitHub de Joel." />
+  <meta name="theme-color" content="#02030a" />
+  <title>GitHub — Joel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.174.0/examples/jsm/" } }
+  </script>
+</head>
+<body data-theme="dark" data-page="github">
+  <div class="boot" id="boot"><div class="boot__cell"><i></i><i></i><i></i><span>03</span></div><p>SINTONIZANDO GITHUB</p><div class="boot__progress"><i></i></div></div>
+  <canvas id="universe" aria-label="Sistema tridimensional de repositorios de GitHub"></canvas>
+  <div class="atmosphere" aria-hidden="true"></div><div class="film-grain" aria-hidden="true"></div><div class="vignette" aria-hidden="true"></div><div class="page-wipe" aria-hidden="true"></div>
+
+  <div class="world-labels">
+    <a class="world-label world-label--github-main" data-anchor="github-profile" data-action="https://github.com/joelbome30" href="https://github.com/joelbome30" target="_blank" rel="noreferrer"><span>GALAXIA PRINCIPAL</span><strong>@JOELBOME30</strong><small>ABRIR PERFIL ↗</small></a>
+    <a class="world-label world-label--return" data-anchor="github-home" data-action="../index.html" href="../index.html"><span>PORTAL DE RETORNO</span><strong>REGRESAR</strong><small>SIGUE LA ÓRBITA ↶</small></a>
+  </div>
+
+  <main class="single-page">
+    <section class="chapter chapter--github is-active">
+      <div class="copy copy--subpage copy--spatial copy--github">
+        <p class="eyebrow">03 / REGISTRO DE EXPERIMENTOS</p>
+        <h2>MI<br /><em>GITHUB</em></h2>
+        <p>Aquí guardo las cosas que voy creando. Algunas están completas, otras siguen cambiando y otras simplemente documentan algo nuevo que quise probar.</p>
+      </div>
+      <p class="page-hint" aria-hidden="true">GALAXIA CENTRAL: PERFIL · PORTAL VERDE: REGRESAR</p>
+    </section>
+  </main>
+  <div class="cursor" id="cursor" aria-hidden="true"><i></i></div>
+  <script>window.setTimeout(() => document.getElementById("boot")?.classList.add("is-finished"), 5000);</script>
+  <script type="module" src="../script.js"></script>
+</body>
+</html>

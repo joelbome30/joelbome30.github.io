@@ -1,21 +1,20 @@
-# Portafolio 3D de Joel
+# Portafolio 3D de Joel — V2.0
 
-Mi portafolio personal: una experiencia web cinematográfica con animaciones, video y un mundo 3D interactivo.
+La segunda versión de mi portafolio personal: un universo interactivo inspirado en interfaces de videojuegos y menús espaciales.
 
-## Ejecutarlo localmente
+## Qué incluye
 
-```powershell
-npm.cmd install
-npm.cmd run dev
-```
+- Universo 3D construido con Three.js y WebGL.
+- Partículas, nebulosas, portales, órbitas y galaxias animadas.
+- Texto integrado dentro de la escena mediante CanvasTexture.
+- Transiciones cinematográficas entre páginas.
+- Secciones independientes para habilidades, proyectos y GitHub.
+- Diseño adaptable para escritorio y dispositivos móviles.
 
-Después abre `http://localhost:5173`.
+## Abrirlo localmente
 
-## Tecnologías
+No necesita instalación ni compilación. Abre `index.html` con Live Server o cualquier servidor estático.
 
-- JavaScript, HTML y CSS
-- Three.js y WebGL
-- Vite
-- GitHub Pages
+## Publicación
 
-La página se publica automáticamente con GitHub Actions cada vez que se envía un cambio a la rama `main`.
+GitHub Actions publica automáticamente la rama `main` en [joelbome30.github.io](https://joelbome30.github.io/).
