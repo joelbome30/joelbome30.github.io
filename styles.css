@@ -896,7 +896,6 @@ button.world-label.is-hovered::after {
 
 .world-label:not(a):not(button) {
   color: color-mix(in srgb, var(--muted) 82%, var(--ink));
-  opacity: 1;
 }
 
 .world-label:not(a):not(button) > span {
@@ -916,16 +915,19 @@ button.world-label.is-hovered::after {
 [data-anchor="menu-skills"] { --ox: -175px; --oy: -48px; text-align: right; }
 [data-anchor="menu-projects"] { --ox: -165px; --oy: 112px; text-align: right; }
 [data-anchor="menu-github"] { --ox: 148px; --oy: 70px; }
-[data-anchor="skill-web"] { --ox: -138px; --oy: 118px; text-align: right; }
-[data-anchor="skill-python"] { --ox: 138px; --oy: -28px; }
-[data-anchor="skill-games"] { --ox: 152px; --oy: 38px; text-align: left; }
-[data-anchor="skill-systems"] { --ox: 145px; --oy: 28px; }
-[data-anchor="project-gamemaker"] { --oy: 175px; text-align: center; }
-[data-anchor="project-friv"] { --oy: 175px; text-align: center; }
-[data-anchor="github-profile"] { --ox: 142px; --oy: 54px; }
-[data-anchor="skills-core"] { --ox: 230px; --oy: 95px; }
-[data-anchor="projects-core"] { --ox: -132px; --oy: 50px; text-align: right; }
-[data-anchor="github-home"] { --ox: -130px; --oy: 34px; text-align: right; }
+[data-anchor="skill-web"] { --ox: -158px; --oy: 0px; text-align: right; }
+[data-anchor="skill-python"] { --ox: 150px; --oy: 0px; }
+[data-anchor="skill-games"] { --ox: -168px; --oy: 0px; text-align: right; }
+[data-anchor="skill-systems"] { --ox: 152px; --oy: 0px; }
+[data-anchor="project-gamemaker"] { --oy: 142px; text-align: center; }
+[data-anchor="project-friv"] { --oy: 142px; text-align: center; }
+[data-anchor="github-profile"] { --ox: 0px; --oy: 158px; text-align: center; }
+[data-anchor="skills-core"] { --ox: 0px; --oy: 108px; text-align: center; }
+[data-anchor="projects-core"] { --ox: -156px; --oy: -12px; text-align: right; }
+[data-anchor="github-home"] { --ox: -168px; --oy: 92px; text-align: right; }
+[data-anchor="constellation-orion"] { --ox: 96px; --oy: -12px; }
+[data-anchor="constellation-gemini"] { --ox: 0px; --oy: -14px; text-align: center; }
+[data-anchor="constellation-cassiopeia"] { --ox: 0px; --oy: -18px; text-align: center; }
 
 .world-label--menu > strong {
   font-size: 1.14rem;
@@ -949,6 +951,24 @@ button.world-label.is-hovered::after {
 
 .world-label--github-main > strong {
   font-size: 1.34rem;
+}
+
+.world-label--constellation {
+  padding: 7px 10px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.42);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff !important;
+}
+
+.world-label--constellation > span {
+  color: #fff;
+  font-size: 0.48rem;
+  letter-spacing: 0.22em;
+}
+
+.world-label--constellation > strong {
+  font-size: 0.84rem;
+  letter-spacing: 0.2em;
 }
 
 .world-label--repo > strong {
@@ -1325,6 +1345,10 @@ button.world-label.is-hovered::after {
   [data-anchor="skills-core"] { --ox: 48px; --oy: 62px; }
   [data-anchor="projects-core"] { --ox: -56px; --oy: 50px; }
   [data-anchor="github-home"] { --ox: -48px; --oy: 16px; }
+
+  .world-label--constellation {
+    display: none;
+  }
 }
 
 @media (max-width: 430px) {

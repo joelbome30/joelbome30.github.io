@@ -51,6 +51,8 @@ const organisms = [];
 const portals = [];
 const floatingSpores = [];
 const returnBeacons = [];
+const constellationStars = [];
+const constellationGroups = [];
 const sceneSystems = [];
 const cosmicEffects = [];
 const sceneTextMeshes = [];
@@ -279,21 +281,21 @@ function createSceneCopy() {
   const layouts = {
     skills: {
       accent: "#5ff8ff",
-      eyebrow: { position: [-5.45, 4.08, 0.15], width: 5.15, rotation: [0.01, -0.04, -0.015], phase: 0.4 },
-      heading: { position: [-4.65, 2.72, -0.48], width: 7.0, rotation: [-0.02, 0.075, -0.012], phase: 1.1 },
-      body: { position: [-4.65, -2.48, -0.72], width: 5.45, rotation: [0.015, -0.055, 0.006], phase: 2.2 },
+      eyebrow: { position: [-5.62, 4.12, 0.15], width: 4.9, rotation: [0.01, -0.04, -0.015], phase: 0.4 },
+      heading: { position: [-5.15, 2.7, -0.48], width: 6.25, rotation: [-0.02, 0.065, -0.012], phase: 1.1 },
+      body: { position: [-5.2, -2.42, -0.72], width: 4.55, rotation: [0.015, -0.045, 0.006], phase: 2.2 },
     },
     projects: {
       accent: "#ff62d3",
-      eyebrow: { position: [-5.5, 4.08, 0.08], width: 5.3, rotation: [0, 0.04, -0.014], phase: 0.8 },
-      heading: { position: [-4.62, 2.68, -0.62], width: 7.25, rotation: [-0.015, 0.085, -0.01], phase: 1.6 },
-      body: { position: [-4.72, -2.52, -0.88], width: 5.25, rotation: [0.018, 0.06, 0.008], phase: 2.7 },
+      eyebrow: { position: [-5.72, 4.12, 0.08], width: 4.8, rotation: [0, 0.035, -0.014], phase: 0.8 },
+      heading: { position: [-5.25, 2.7, -0.62], width: 5.95, rotation: [-0.015, 0.065, -0.01], phase: 1.6 },
+      body: { position: [-5.3, -1.42, -0.88], width: 4.3, rotation: [0.018, 0.045, 0.008], phase: 2.7 },
     },
     github: {
       accent: "#a66cff",
-      eyebrow: { position: [-5.35, 4.02, 0.1], width: 5.2, rotation: [0, -0.04, -0.016], phase: 0.2 },
-      heading: { position: [-4.72, 2.72, -0.66], width: 6.55, rotation: [-0.02, 0.09, -0.012], phase: 1.4 },
-      body: { position: [-4.4, -2.38, -0.86], width: 5.25, rotation: [0.016, -0.065, 0.008], phase: 2.4 },
+      eyebrow: { position: [-5.58, 4.08, 0.1], width: 4.85, rotation: [0, -0.035, -0.016], phase: 0.2 },
+      heading: { position: [-5.16, 2.72, -0.66], width: 5.8, rotation: [-0.02, 0.07, -0.012], phase: 1.4 },
+      body: { position: [-5.12, -2.18, -0.86], width: 4.45, rotation: [0.016, -0.05, 0.008], phase: 2.4 },
     },
   };
   const layout = layouts[page];
@@ -522,6 +524,56 @@ function createBranch(parent, start, end, role = "cyan", bend = 0.5) {
   trace.scale.setScalar(1.012);
   parent.add(trace);
   return curve;
+}
+
+function createConstellation(parent, points, connections, options = {}) {
+  const group = new THREE.Group();
+  const defaultRole = options.role || "cyan";
+  const segmentsByRole = new Map();
+
+  connections.forEach(([from, to, role = defaultRole]) => {
+    if (!segmentsByRole.has(role)) segmentsByRole.set(role, []);
+    segmentsByRole.get(role).push(points[from].clone(), points[to].clone());
+  });
+
+  segmentsByRole.forEach((segments, role) => {
+    const geometry = new THREE.BufferGeometry().setFromPoints(segments);
+    const glowLine = new THREE.LineSegments(geometry, lineMaterial(role, 0.16, 0.09));
+    glowLine.scale.setScalar(1.008);
+    group.add(glowLine);
+    group.add(new THREE.LineSegments(geometry.clone(), lineMaterial(role, 0.62, 0.32)));
+  });
+
+  points.forEach((position, index) => {
+    const role = options.pointRoles?.[index] || defaultRole;
+    const major = options.major?.includes(index);
+    const marker = new THREE.Group();
+    const size = (options.starSize || 0.075) * (major ? 1.55 : 1);
+    marker.position.copy(position);
+    marker.userData.baseScale = major ? 1.18 : 1;
+    marker.userData.phase = index * 0.73 + Math.random() * 0.5;
+    marker.add(
+      createGlow(role, size * (major ? 13 : 10), major ? 0.32 : 0.2),
+      new THREE.Mesh(
+        new THREE.OctahedronGeometry(size, 1),
+        basicMaterial(role, { opacity: 0.96, lightOpacity: 0.7, additive: true, depthWrite: false }),
+      ),
+    );
+    constellationStars.push(marker);
+    group.add(marker);
+  });
+
+  if (options.anchorName) {
+    const anchor = new THREE.Object3D();
+    anchor.position.copy(options.anchorPosition || points[options.anchorIndex || 0]);
+    anchors.set(options.anchorName, anchor);
+    group.add(anchor);
+  }
+
+  group.userData.phase = Math.random() * Math.PI * 2;
+  constellationGroups.push(group);
+  parent.add(group);
+  return group;
 }
 
 function createNode(parent, name, position, options = {}) {
@@ -852,30 +904,58 @@ function createHeroSystem() {
 function createSkillsSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
-  group.userData.mobileY = -2.0;
-  group.userData.desktopX = 0;
-  group.userData.mobileX = -1.85;
+  group.userData.mobileY = -0.75;
+  group.userData.desktopX = 2.2;
+  group.userData.mobileX = -1.15;
+  group.userData.mobileScale = 0.68;
   scene.add(group);
   sceneSystems.push(group);
 
-  const center = new THREE.Vector3(1.8, 0.1, -0.2);
-  const core = createOrganism(group, center, 1.34, { primary: "violet", secondary: "cyan", nucleus: "acid" });
+  const center = new THREE.Vector3(2.0, 0.05, -0.2);
+  const skillPositions = [
+    new THREE.Vector3(-0.7, 2.75, 0.25),
+    new THREE.Vector3(4.8, 2.45, -0.35),
+    new THREE.Vector3(-0.2, -2.75, 0.1),
+    new THREE.Vector3(5.1, -2.5, 0.1),
+  ];
+  const orionPoints = [
+    skillPositions[0],
+    skillPositions[1],
+    skillPositions[2],
+    skillPositions[3],
+    new THREE.Vector3(0.95, 0.38, -0.48),
+    center,
+    new THREE.Vector3(3.05, -0.28, -0.44),
+    new THREE.Vector3(2.0, 3.55, -0.62),
+  ];
+  createConstellation(group, orionPoints, [
+    [0, 1, "cyan"], [0, 4, "cyan"], [4, 5, "violet"], [5, 6, "violet"],
+    [6, 1, "blue"], [4, 2, "pink"], [6, 3, "acid"], [2, 3, "violet"], [7, 5, "cyan"],
+  ], {
+    role: "cyan",
+    pointRoles: ["cyan", "blue", "pink", "acid", "cyan", "violet", "blue", "cyan"],
+    major: [4, 5, 6, 7],
+    starSize: 0.085,
+    anchorName: "constellation-orion",
+    anchorPosition: new THREE.Vector3(2.0, 3.72, -0.5),
+  });
+
+  const core = createOrganism(group, center, 1.02, { primary: "violet", secondary: "cyan", nucleus: "acid" });
   makeOrganismInteractive(core, "skills-core", "../index.html");
-  addReturnBeacon(core, 1.92);
+  addReturnBeacon(core, 1.52);
 
   const skills = [
-    { name: "skill-web", position: new THREE.Vector3(-0.1, 3.0, 0.25), role: "cyan" },
-    { name: "skill-python", position: new THREE.Vector3(5.8, 3.0, -0.35), role: "blue" },
-    { name: "skill-games", position: new THREE.Vector3(-0.1, -3.0, 0.1), role: "pink" },
-    { name: "skill-systems", position: new THREE.Vector3(5.8, -3.0, 0.1), role: "acid" },
+    { name: "skill-web", position: skillPositions[0], role: "cyan" },
+    { name: "skill-python", position: skillPositions[1], role: "blue" },
+    { name: "skill-games", position: skillPositions[2], role: "pink" },
+    { name: "skill-systems", position: skillPositions[3], role: "acid" },
   ];
 
   skills.forEach((skill, index) => {
-    createBranch(group, center, skill.position, skill.role, index % 2 ? -0.62 : 0.62);
     createNode(group, skill.name, skill.position, {
       role: skill.role,
       secondary: index % 2 ? "violet" : "cyan",
-      scale: 2.65,
+      scale: 2.45,
       mobileScale: 1.05,
     });
   });
@@ -983,55 +1063,109 @@ function createPortal(parent, name, position, action, roles = ["cyan", "violet"]
 function createProjectsSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
-  group.userData.mobileY = -1.65;
-  group.userData.desktopX = 3.0;
-  group.userData.mobileX = 1.05;
+  group.userData.mobileY = -0.45;
+  group.userData.desktopX = 2.2;
+  group.userData.mobileX = -1.25;
+  group.userData.mobileScale = 0.62;
   scene.add(group);
   sceneSystems.push(group);
 
-  const left = new THREE.Vector3(-5.3, -0.15, 0);
-  const right = new THREE.Vector3(2.0, 0.28, -0.35);
+  const left = new THREE.Vector3(-0.4, 2.25, 0);
+  const right = new THREE.Vector3(5.0, 2.25, -0.35);
+  const seed = new THREE.Vector3(2.2, -3.35, -0.6);
+  const geminiPoints = [
+    left,
+    new THREE.Vector3(-0.55, 0.65, -0.35),
+    new THREE.Vector3(-1.75, -0.05, -0.5),
+    new THREE.Vector3(-0.35, -1.0, -0.45),
+    new THREE.Vector3(-1.25, -2.85, -0.55),
+    new THREE.Vector3(0.45, -2.9, -0.5),
+    right,
+    new THREE.Vector3(4.75, 0.65, -0.38),
+    new THREE.Vector3(6.0, -0.1, -0.55),
+    new THREE.Vector3(4.55, -1.0, -0.46),
+    new THREE.Vector3(3.75, -2.9, -0.55),
+    new THREE.Vector3(5.35, -2.8, -0.5),
+    seed,
+  ];
+  createConstellation(group, geminiPoints, [
+    [0, 1, "cyan"], [1, 2, "cyan"], [1, 3, "cyan"], [3, 4, "cyan"], [3, 5, "cyan"],
+    [6, 7, "pink"], [7, 8, "pink"], [7, 9, "pink"], [9, 10, "pink"], [9, 11, "pink"],
+    [1, 7, "violet"], [5, 12, "acid"], [12, 10, "acid"],
+  ], {
+    role: "violet",
+    pointRoles: ["cyan", "cyan", "blue", "cyan", "blue", "cyan", "pink", "pink", "violet", "pink", "violet", "pink", "acid"],
+    major: [0, 6, 12],
+    starSize: 0.08,
+    anchorName: "constellation-gemini",
+    anchorPosition: new THREE.Vector3(2.3, 3.45, -0.55),
+  });
+
   const gameMakerPortal = createPortal(group, "project-gamemaker", left, "https://github.com/joelbome30/JuegoGameMaker", ["cyan", "violet"]);
   const frivPortal = createPortal(group, "project-friv", right, "https://github.com/joelbome30/Juegos_Frivnt", ["pink", "violet"]);
   [gameMakerPortal, frivPortal].forEach((portal) => {
-    portal.userData.desktopScale = 1.55;
+    portal.userData.desktopScale = 1.18;
     portal.userData.mobileScale = 1.05;
     portal.userData.baseScale = portal.userData.desktopScale;
     portal.scale.setScalar(portal.userData.baseScale);
   });
 
-  const seed = new THREE.Vector3(-1.75, -3.2, -0.6);
-  const core = createOrganism(group, seed, 1.08, { primary: "acid", secondary: "cyan", nucleus: "pink" });
+  const core = createOrganism(group, seed, 0.9, { primary: "acid", secondary: "cyan", nucleus: "pink" });
   makeOrganismInteractive(core, "projects-core", "../index.html");
-  addReturnBeacon(core, 1.92);
-  createBranch(group, seed, left, "cyan", -0.35);
-  createBranch(group, seed, right, "pink", 0.4);
+  addReturnBeacon(core, 1.46);
 }
 
 function createGithubSystem() {
   const group = new THREE.Group();
   group.userData.baseY = 0;
-  group.userData.mobileY = -1.7;
-  group.userData.desktopX = 0.35;
-  group.userData.mobileX = -2.0;
+  group.userData.mobileY = -0.55;
+  group.userData.desktopX = 2.0;
+  group.userData.mobileX = -1.15;
+  group.userData.mobileScale = 0.68;
   scene.add(group);
   sceneSystems.push(group);
 
-  const center = new THREE.Vector3(2.1, 0, -0.55);
-  const core = createOrganism(group, center, 1.72, {
+  const cassiopeiaPoints = [
+    new THREE.Vector3(-0.8, 1.7, -0.45),
+    new THREE.Vector3(0.7, -0.9, -0.2),
+    new THREE.Vector3(2.2, 1.4, -0.55),
+    new THREE.Vector3(3.8, -1.0, -0.28),
+    new THREE.Vector3(5.4, 1.8, 0.15),
+  ];
+  createConstellation(group, cassiopeiaPoints, [
+    [0, 1, "cyan"], [1, 2, "violet"], [2, 3, "pink"], [3, 4, "acid"],
+  ], {
+    role: "violet",
+    pointRoles: ["cyan", "blue", "pink", "violet", "acid"],
+    major: [0, 2, 4],
+    starSize: 0.1,
+    anchorName: "constellation-cassiopeia",
+    anchorPosition: new THREE.Vector3(2.25, 3.05, -0.55),
+  });
+
+  [0, 1, 3].forEach((pointIndex, index) => {
+    createNode(group, "cassiopeia-star-" + pointIndex, cassiopeiaPoints[pointIndex], {
+      role: ["cyan", "blue", "violet"][index],
+      secondary: ["violet", "cyan", "pink"][index],
+      scale: index === 1 ? 1.24 : 1.38,
+      mobileScale: 0.9,
+    });
+  });
+
+  const center = cassiopeiaPoints[2];
+  const core = createOrganism(group, center, 1.58, {
     primary: "violet",
     secondary: "pink",
     nucleus: "cyan",
   });
   makeOrganismInteractive(core, "github-profile", "https://github.com/joelbome30");
 
-  const exitPosition = new THREE.Vector3(6.2, -2.8, 0.25);
-  createBranch(group, center, exitPosition, "acid", -0.58);
+  const exitPosition = cassiopeiaPoints[4];
   const exit = createNode(group, "github-home", exitPosition, {
     action: "../index.html",
     role: "acid",
     secondary: "cyan",
-    scale: 2.15,
+    scale: 1.9,
     mobileScale: 1.08,
   });
   addReturnBeacon(exit, 0.67);
@@ -1042,6 +1176,7 @@ function updateResponsiveLayout() {
   sceneSystems.forEach((system) => {
     system.position.y = mobile ? system.userData.mobileY : system.userData.baseY;
     system.position.x = mobile ? system.userData.mobileX : system.userData.desktopX;
+    system.scale.setScalar(mobile ? (system.userData.mobileScale || 1) : (system.userData.desktopScale || 1));
   });
   animatedNodes.forEach((node) => {
     node.userData.baseScale = mobile ? node.userData.mobileScale : node.userData.desktopScale;
@@ -1273,6 +1408,16 @@ function animate() {
     beacon.rotation.z -= delta * (hovered ? 0.92 : 0.28 + index * 0.025);
     const pulse = 1 + Math.sin(elapsed * 1.25 + beacon.userData.phase) * 0.045 + (hovered ? 0.12 : 0);
     beacon.scale.setScalar(pulse);
+  });
+
+  constellationStars.forEach((star, index) => {
+    const pulse = star.userData.baseScale * (1 + Math.sin(elapsed * 1.35 + star.userData.phase) * 0.16);
+    star.scale.setScalar(pulse);
+    star.rotation.z += delta * (0.06 + (index % 4) * 0.015);
+  });
+
+  constellationGroups.forEach((group) => {
+    group.position.z = Math.sin(elapsed * 0.22 + group.userData.phase) * 0.025;
   });
 
   floatingSpores.forEach((spore, index) => {
